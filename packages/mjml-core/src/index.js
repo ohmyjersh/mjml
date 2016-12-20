@@ -7,9 +7,9 @@ import * as helpers from './helpers'
 export MJMLElement from './decorators/MJMLElement'
 export { MJMLRenderer, registerMJElement, elements, helpers, registerMJHeadElement, MJMLHeadElements, formatValidationError, registerMJRule, rulesCollection }
 export const documentParser = (content, attributes) => {
-  const documentParser = require('./parsers/document').default
+  const parseMjml = require('./parsers/document').default
 
-  return documentParser(content, attributes)
+  return parseMjml(content, attributes)
 }
 
 export const version = () => '__MJML_VERSION__'

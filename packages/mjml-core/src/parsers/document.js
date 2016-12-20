@@ -2,34 +2,76 @@ import { ParseError, EmptyMJMLError, NullElementError } from '../Error'
 import compact from 'lodash/compact'
 import dom from '../helpers/dom'
 import each from 'lodash/each'
-import toArray from 'lodash/toArray';
+import toArray from 'lodash/toArray'
+import mapValues from 'lodash/mapValues'
+import isObject from 'lodash/isObject'
 import filter from 'lodash/filter'
 import { endingTags } from '../MJMLElementsCollection'
 import MJMLHeadElements from '../MJMLHead'
 import warning from 'warning'
+import expat from 'node-expat'
+import _ from 'lodash'
 
 const regexTag = tag => new RegExp(`<${tag}([^>]*)>([^]*?)</${tag}>`, 'gmi')
+const replaceTag = tag => `<${tag}$1><![CDATA[$2]]></${tag}>`
+
+function replaceAmpersandsInAttributes (input) {
+  const reg = new RegExp('([^\\s]*=")([^"]*)(")', 'g')
+
+  const replaceAmp = match => `&amp;${match.length > 1 ? match.charAt(1) : ''}`
+  const replaceAttrVal = match => match.replace(/&([^a]|$)/g, replaceAmp)
+
+  return input.replace(reg, (match, beforeAttr, attrVal, afterAttr) => {
+    const newAttrVal = attrVal.replace(/.*&([^a]|$).*/g, replaceAttrVal)
+    return `${beforeAttr}${newAttrVal}${afterAttr}`
+  })
+}
+
+function cleanNode (node) {
+  delete node.parent
+
+  // delete children if needed
+  if (node.children.length) {
+    node.children.forEach(cleanNode)
+  } else {
+    delete node.children
+  }
+
+  // delete attributes if needed
+  if (Object.keys(node.attributes).length === 0) {
+    delete node.attributes
+  }
+}
 
 /**
  * Avoid htmlparser to parse ending tags
  */
-const safeEndingTags = content => {
-  const regexpBody = regexTag('mj-body')
-  const safeContent = content.replace('$', '&#36;')
-
-  let bodyContent = safeContent.match(regexpBody)
-
-  if (!bodyContent) {
-    return safeContent
-  }
-
-  bodyContent = bodyContent[0]
-
+function safeEndingTags (content) {
   endingTags.forEach(tag => {
-    bodyContent = bodyContent.replace(regexTag(tag), dom.replaceContentByCdata(tag))
+    content = content.replace(regexTag(tag), replaceTag(tag))
   })
+  return content
+}
 
-  return safeContent.replace(regexpBody, bodyContent)
+/**
+ * Convert "true" and "false" string attributes values
+ * to corresponding Booleans
+ */
+function convertBooleansOnAttrs (attrs) {
+  return mapValues(attrs, val => {
+    if (val === 'true') { return true }
+    if (val === 'false') { return false }
+    return val
+  })
+}
+
+function setEmptyAttributes (node) {
+  if (!node.attributes) {
+    node.attributes = {}
+  }
+  if (node.children) {
+    node.children.forEach(setEmptyAttributes)
+  }
 }
 
 /**
@@ -80,40 +122,101 @@ const parseHead = (head, attributes) => {
   attributes.container = dom.getHTML($container)
 }
 
-/**
- * Import an html document containing some mjml
- * returns JSON
- *   - container: the mjml container
- *   - mjml: a json representation of the mjml
- */
-const documentParser = (content, attributes) => {
-  const safeContent = safeEndingTags(content)
+export default function parseMjml (xml, attributes) {
+  if (!xml) { return null }
 
-  let body
-  let head
+  const addEmptyAttributes = true
+  const convertBooleans = true
+
+  let safeXml = safeEndingTags(xml)
+
+  safeXml = replaceAmpersandsInAttributes(safeXml)
+
+  const parser = new expat.Parser('utf-8')
+
+  let mjml = null
+  let cur = null
+
+  parser.on('startElement', (name, attrs) => {
+    if (convertBooleans) {
+      // "true" and "false" will be converted to bools
+      attrs = convertBooleansOnAttrs(attrs)
+    }
+
+    const newNode = {
+      parent: cur,
+      tagName: name,
+      attributes: attrs,
+      children: [],
+    }
+
+    if (cur) {
+      cur.children.push(newNode)
+    } else {
+      mjml = newNode
+    }
+
+    cur = newNode
+  })
+
+  parser.on('endElement', () => {
+    cur = (cur && cur.parent) || null
+  })
+
+  parser.on('text', text => {
+    if (!text) { return }
+
+    const val = `${(cur.content || '')}${text}`.trim()
+
+    if (val) {
+      cur.content = val
+    }
+  })
+
+  parser.on('error', (err) => { throw err })
 
   try {
-    const $ = dom.parseXML(safeContent)
+    parser.write(safeXml)
+  } catch (reason) {
+    if (reason === 'mismatched tag') {
+      if (cur) {
+        throw new Error(`Tag ${cur.tagName} is not closed.`)
+      }
 
-    body = $('mjml > mj-body')
-    head = $('mjml > mj-head')
-
-    if (body.length > 0) {
-      body = body.children().get(0)
+      throw new Error('No correct tag found.')
     }
-  } catch (e) {
-    throw new ParseError('Error while parsing the file')
+
+    throw new Error(reason)
   }
 
-  if (!body || body.length < 1) {
-    throw new EmptyMJMLError('No root "<mjml>" or "<mj-body>" found in the file, or "<mj-body>" is empty')
+  if (!isObject(mjml)) {
+    throw new Error('Parsing failed. Check your mjml.')
   }
 
-  if (head && head.length === 1) {
-    parseHead(head.get(0), attributes)
+  cleanNode(mjml)
+
+  // assign "attributes" property if not set
+  if (addEmptyAttributes) {
+    setEmptyAttributes(mjml)
   }
 
-  return mjmlElementParser(body, safeContent)
+  if (mjml.tagName === 'mjml') {
+    const mjHead = _.find(mjml.children, child => child.tagName === 'mj-head')
+
+    if (mjHead.children) {
+      each(mjHead.children, el => {
+        const handler = MJMLHeadElements[el.tagName]
+
+        if (handler) {
+          handler(el, { ...attributes })
+        }
+      })
+    }
+
+    console.log(attributes)
+  }
+
+  process.exit()
+
+  return mjml
 }
-
-export default documentParser

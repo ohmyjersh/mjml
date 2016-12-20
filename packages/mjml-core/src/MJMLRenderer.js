@@ -45,7 +45,8 @@ export default class MJMLRenderer {
       defaultAttributes: {},
       cssClasses: {},
       css: [],
-      fonts: cloneDeep(defaultFonts)
+      fonts: cloneDeep(defaultFonts),
+      title: '',
     }
 
     this.content = content
@@ -97,9 +98,14 @@ export default class MJMLRenderer {
     const renderedMJML = ReactDOMServer.renderToStaticMarkup(rootElemComponent)
 
     debug('React rendering done. Continue with special overrides.')
-    const MJMLDocument = this.attributes.container.replace('__content__', renderedMJML)
+    const MJMLDocument = this.attributes.container
+      .replace('__content__', renderedMJML)
+      .replace('__title__', this.attributes.title)
 
-    return { errors: this.errors, html: this.postRender(MJMLDocument) }
+    return {
+      errors: this.errors,
+      html: this.postRender(MJMLDocument),
+    }
   }
 
   postRender (MJMLDocument) {
