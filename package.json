@@ -14,11 +14,12 @@
     "npm": "2.x || 3.x"
   },
   "devDependencies": {
-    "babel": "^6.5.2",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",
+    "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-es2015": "^6.18.0",
+    "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
     "babel-register": "^6.16.3",
@@ -34,5 +35,10 @@
     "shelljs": "^0.7.5",
     "through2": "^2.0.3",
     "yargs": "^6.5.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.2",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1"
   }
 }
