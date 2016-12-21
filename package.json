@@ -7,7 +7,7 @@
     "lint": "eslint ."
   },
   "devEngines": {
-    "node": "4.x || 5.x || 6.x",
+    "node": "4.x || 6.x",
     "npm": "2.x || 3.x"
   },
   "devDependencies": {
