@@ -4,12 +4,12 @@ export default {
   name: 'mj-font',
   handler: (element, globalAttributes) => {
     const {
-      attributes,
+      attributes
     } = element
 
     const font = find(globalAttributes.fonts, [
       'name',
-      attributes.name,
+      attributes.name
     ])
 
     if (font) {
@@ -17,8 +17,8 @@ export default {
     } else {
       globalAttributes.fonts.push({
         name: attributes.name,
-        url: attributes.href,
+        url: attributes.href
       })
     }
-  },
+  }
 }

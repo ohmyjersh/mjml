@@ -17,12 +17,12 @@ const defaultMJMLDefinition = {
     'border-right': null,
     'border-top': null,
     'vertical-align': null,
-    'width': null,
+    'width': null
   }
 }
 const baseStyles = {
   div: {
-    verticalAlign: 'top',
+    verticalAlign: 'top'
   }
 }
 const postRender = $ => {
@@ -30,7 +30,7 @@ const postRender = $ => {
 
   each({
     'mj-column-per': '%',
-    'mj-column-px': 'px',
+    'mj-column-px': 'px'
   }, (unit, className) => {
     const columnWidths = []
 

@@ -15,13 +15,13 @@ const packages = fs.readdirSync(PACKAGES_PATH)
   .filter(file => fs.statSync(path.resolve(PACKAGES_PATH, file)).isDirectory())
   .reduce((acc, file) => ({
     ...acc,
-    [file]: path.resolve(PACKAGES_PATH, file),
+    [file]: path.resolve(PACKAGES_PATH, file)
   }), {})
 
 const sharedDeps = [
   'lodash',
   'react-dom',
-  'react',
+  'react'
 ]
 
 let srcEx
@@ -48,7 +48,7 @@ gulp.task('install', () => Promise.all(
   .then(() => Promise.all(
     // Remove duplicated packages and shared dependencies so they are loaded
     // from the top
-    _.map(packages, (directory, packageName) => Promise.all(
+    _.map(packages, directory => Promise.all(
       Object.keys(packages)
         .concat(sharedDeps)
         .map(dependencyName => new Promise(resolve => {
@@ -88,7 +88,7 @@ gulp.task('test', () => {
 
 gulp.task('clean', () => Promise.all(
   // Remove package node_modules and lib directory
-  _.map(packages, (directory, packageName) => new Promise(resolve => {
+  _.map(packages, directory => new Promise(resolve => {
     rm('-rf', path.resolve(directory, 'node_modules'), path.resolve(directory, 'lib'))
     resolve()
   }))

@@ -2,7 +2,7 @@ export default {
   name: 'mj-title',
   handler: (element, globalAttributes) => {
     const {
-      content,
+      content
     } = element
 
     if (content) {

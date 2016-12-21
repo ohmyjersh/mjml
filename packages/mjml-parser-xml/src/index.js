@@ -18,7 +18,7 @@ export default function parseMjml (xml, options) {
     MJMLHeadElements,
     endingTags,
     addEmptyAttributes,
-    convertBooleans,
+    convertBooleans
   } = options
 
   let safeXml = safeEndingTags(endingTags, xml)
@@ -40,7 +40,7 @@ export default function parseMjml (xml, options) {
       parent: cur,
       tagName: name,
       attributes: attrs,
-      children: [],
+      children: []
     }
 
     if (cur) {
@@ -111,6 +111,6 @@ export default function parseMjml (xml, options) {
     body,
     globalAttributes,
     head,
-    mjml,
+    mjml
   }
 }

@@ -9,7 +9,7 @@ export default {
     each(compact(filter(element.children, el => el.tagName)), el => {
       const {
         tagName,
-        attributes,
+        attributes
       } = el
 
       if (tagName === 'mj-class') {
@@ -18,5 +18,5 @@ export default {
 
       globalAttributes.defaultAttributes[tagName] = attributes
     })
-  },
+  }
 }

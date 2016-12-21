@@ -9,7 +9,6 @@ import MJMLValidator from 'mjml-validator'
 import cloneDeep from 'lodash/cloneDeep'
 import curryRight from 'lodash/curryRight'
 import defaults from 'lodash/defaults'
-import find from 'lodash/find'
 
 import defaultFonts from './configs/listFontsImports'
 import defaultContainer from './configs/defaultContainer'
@@ -22,7 +21,6 @@ import isBrowser from './helpers/isBrowser'
 
 import { EmptyMJMLError, MJMLValidationError } from './Error'
 import configParser from './parsers/config'
-import documentParser from './parsers/document'
 import includeExternal from './includeExternal'
 import MJMLElementsCollection, { endingTags, postRenders } from './MJMLElementsCollection'
 import MJMLHeadElements from './MJMLHead'
@@ -54,7 +52,7 @@ export default class MJMLRenderer {
       cssClasses: {},
       css: [],
       fonts: cloneDeep(defaultFonts),
-      title: '',
+      title: ''
     }
 
     this.content = content
@@ -75,12 +73,12 @@ export default class MJMLRenderer {
     const parser = MJMLParser(this.content, {
       endingTags: endingTags.concat([
         'mj-style',
-        'mj-title',
+        'mj-title'
       ]),
       globalAttributes: this.globalAttributes,
       MJMLHeadElements,
       addEmptyAttributes: true,
-      convertBooleans: true,
+      convertBooleans: true
     })
 
     if (parser !== null) {
@@ -114,7 +112,7 @@ export default class MJMLRenderer {
 
     if (!rootComponent) {
       return {
-        errors: this.errors,
+        errors: this.errors
       }
     }
 
@@ -131,7 +129,7 @@ export default class MJMLRenderer {
 
     return {
       errors: this.errors,
-      html: this.postRender(MJMLDocument),
+      html: this.postRender(MJMLDocument)
     }
   }
 
