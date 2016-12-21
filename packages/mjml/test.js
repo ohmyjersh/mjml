@@ -22,6 +22,12 @@ const inputMJML = `<mjml>
     <mj-container background-color="#d6dde5">
       <mj-section background-color="white">
         <mj-column>
+          <mj-text font-family="Raleway">
+            Test test test
+          </mj-text>
+          <mj-text font-family="Open Sans">
+            Test test test
+          </mj-text>
           <mj-carousel padding="30px" border-radius="30px" tb-border-radius="15px" tb-selected-border-color="#D6C" tb-hover-border-color="#F56">
             <mj-carousel-image src="https://www.mailjet.com/wp-content/uploads/2016/11/ecommerce-guide.jpg" href="http://google.fr" />
             <mj-carousel-image src="https://www.mailjet.com/wp-content/uploads/2016/09/3@1x.png" alt="wow" />

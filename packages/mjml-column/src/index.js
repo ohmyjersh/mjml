@@ -10,25 +10,28 @@ const defaultMJMLDefinition = {
   attributes: {
     'background': null,
     'background-color': null,
-    "border": null,
-    "border-bottom": null,
-    "border-left": null,
-    "border-radius": null,
-    "border-right": null,
-    "border-top": null,
+    'border': null,
+    'border-bottom': null,
+    'border-left': null,
+    'border-radius': null,
+    'border-right': null,
+    'border-top': null,
     'vertical-align': null,
-    'width': null
+    'width': null,
   }
 }
 const baseStyles = {
   div: {
-    verticalAlign: 'top'
+    verticalAlign: 'top',
   }
 }
 const postRender = $ => {
   const mediaQueries = []
 
-  each({ 'mj-column-per': '%', 'mj-column-px': 'px' }, (unit, className) => {
+  each({
+    'mj-column-per': '%',
+    'mj-column-px': 'px',
+  }, (unit, className) => {
     const columnWidths = []
 
     $(`[class*="${className}"]`).each(function () {

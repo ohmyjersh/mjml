@@ -1,32 +1,36 @@
-import dom from '../helpers/dom'
+const buildTags = toImport => {
+  if (!toImport.length) { return '' }
 
-const buildTags = ($, toImport) => {
-  if (!toImport.length) {
-    return
-  }
-
-  $('head').append(`\n<!--[if !mso]><!-->
-    ${toImport.map(url => `<link href="${url}" rel="stylesheet" type="text/css">`).join('\n')}
-    <style type="text/css">\n
-      ${toImport.map(url => `  @import url(${url});`).join('\n')}\n
-    </style>
-  <!--<![endif]-->`)
+  return (
+`<!--[if !mso]><!-->
+  ${toImport.map(url => `<link href="${url}" rel="stylesheet" type="text/css">`).join('\n').trim()}
+  <style type="text/css">
+    ${toImport.map(url => `@import url(${url});`).join('\n').trim()}
+  </style>
+<!--<![endif]-->\n`
+  )
 }
 
-export default (options = {}) => {
-  const { fonts, $ } = options
-  const content = dom.getHTML($)
-
+export default (content, fonts) => {
   const toImport = []
 
   fonts.forEach(font => {
-    const { name, url } = font
-    const regex = new RegExp(`"[^"]*font-family:[^"]*${name}[^"]*"`)
+    const {
+      name,
+      url,
+    } = font
+
+    const regex = new RegExp(`"[^"]*font-family:[^"]*${name}[^"]*"`, 'gmi')
 
     if (content.match(regex)) {
       toImport.push(url)
     }
   })
 
-  return buildTags($, toImport)
+  return toImport.length ?
+    content.replace(
+      /<head([^>]*)>([^]*?)<\/head>/,
+      `<head$1>$2${buildTags(toImport)}</head>`
+    ) :
+    content
 }

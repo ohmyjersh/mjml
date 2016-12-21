@@ -1,23 +1,31 @@
-import { EmptyMJMLError, MJMLValidationError } from './Error'
-import { fixLegacyAttrs, removeCDATA } from './helpers/postRender'
-import { parseInstance } from './helpers/mjml'
-import cloneDeep from 'lodash/cloneDeep'
-import configParser from './parsers/config'
-import curryRight from 'lodash/curryRight'
-import documentParser from './parsers/document'
-import defaults from 'lodash/defaults'
-import defaultContainer from './configs/defaultContainer'
-import defaultFonts from './configs/listFontsImports'
-import dom from './helpers/dom'
-import he from 'he'
-import importFonts from './helpers/importFonts'
-import includeExternal from './includeExternal'
-import { html as beautify } from 'js-beautify'
-import MJMLValidator from 'mjml-validator'
-import MJMLElementsCollection, { postRenders } from './MJMLElementsCollection'
-import isBrowser from './helpers/isBrowser'
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
+
+import { html as beautify } from 'js-beautify'
+import he from 'he'
+import MJMLParser from 'mjml-parser-xml'
+import MJMLValidator from 'mjml-validator'
+
+import cloneDeep from 'lodash/cloneDeep'
+import curryRight from 'lodash/curryRight'
+import defaults from 'lodash/defaults'
+import find from 'lodash/find'
+
+import defaultFonts from './configs/listFontsImports'
+import defaultContainer from './configs/defaultContainer'
+
+import { fixLegacyAttrs } from './helpers/postRender'
+import { parseInstance } from './helpers/mjml'
+import dom from './helpers/dom'
+import importFonts from './helpers/importFonts'
+import isBrowser from './helpers/isBrowser'
+
+import { EmptyMJMLError, MJMLValidationError } from './Error'
+import configParser from './parsers/config'
+import documentParser from './parsers/document'
+import includeExternal from './includeExternal'
+import MJMLElementsCollection, { endingTags, postRenders } from './MJMLElementsCollection'
+import MJMLHeadElements from './MJMLHead'
 
 const debug = require('debug')('mjml-engine/mjml2html')
 
@@ -40,7 +48,7 @@ export default class MJMLRenderer {
       configParser()
     }
 
-    this.attributes = {
+    this.globalAttributes = {
       container: defaultContainer(),
       defaultAttributes: {},
       cssClasses: {},
@@ -50,7 +58,7 @@ export default class MJMLRenderer {
     }
 
     this.content = content
-    this.options = defaults(options, { level: "soft", disableMjStyle: false, disableMjInclude: false, disableMinify: false })
+    this.options = defaults(options, { level: 'soft', disableMjStyle: false, disableMjInclude: false, disableMinify: false })
 
     if (typeof this.content === 'string') {
       this.parseDocument()
@@ -63,18 +71,32 @@ export default class MJMLRenderer {
     }
 
     debug('Start parsing document')
-    this.content = documentParser(this.content, this.attributes, this.options)
-    debug('Content parsed')
+
+    const parser = MJMLParser(this.content, {
+      endingTags: endingTags.concat([
+        'mj-style',
+        'mj-title',
+      ]),
+      globalAttributes: this.globalAttributes,
+      MJMLHeadElements,
+      addEmptyAttributes: true,
+      convertBooleans: true,
+    })
+
+    if (parser !== null) {
+      this.content = parser.body.children[0]
+
+      debug('Content parsed')
+    }
   }
 
   validate () {
-    if (this.options.level == "skip") {
-      return;
-    }
+    if (this.options.level === 'skip') { return }
 
     this.errors = MJMLValidator(this.content)
 
-    if (this.options.level == "strict" && this.errors.length > 0) {
+    if (this.options.level === 'strict' &&
+        this.errors.length > 0) {
       throw new MJMLValidationError(this.errors)
     }
   }
@@ -85,22 +107,27 @@ export default class MJMLRenderer {
     }
 
     debug('Validating markup')
+
     this.validate()
 
     const rootComponent = MJMLElementsCollection[this.content.tagName]
 
     if (!rootComponent) {
-      return { errors: this.errors }
+      return {
+        errors: this.errors,
+      }
     }
 
     debug('Render to static markup')
-    const rootElemComponent = React.createElement(rootComponent, { mjml: parseInstance(this.content, this.attributes ) })
+
+    const rootElemComponent = React.createElement(rootComponent, { mjml: parseInstance(this.content, this.globalAttributes) })
     const renderedMJML = ReactDOMServer.renderToStaticMarkup(rootElemComponent)
 
     debug('React rendering done. Continue with special overrides.')
-    const MJMLDocument = this.attributes.container
+
+    const MJMLDocument = this.globalAttributes.container
       .replace('__content__', renderedMJML)
-      .replace('__title__', this.attributes.title)
+      .replace('__title__', this.globalAttributes.title)
 
     return {
       errors: this.errors,
@@ -109,11 +136,12 @@ export default class MJMLRenderer {
   }
 
   postRender (MJMLDocument) {
-    const externalCSS = this.attributes.css.join('')
+    const externalCSS = this.globalAttributes.css.join('')
+
+    MJMLDocument = importFonts(MJMLDocument, this.globalAttributes.fonts)
 
     let $ = dom.parseHTML(MJMLDocument)
 
-    importFonts({ $, fonts: this.attributes.fonts })
     $ = fixLegacyAttrs($)
 
     postRenders.forEach(postRender => {
@@ -122,12 +150,14 @@ export default class MJMLRenderer {
       }
     })
 
-    return [ removeCDATA,
+    return [
       !this.options.disableMjStyle ? curryRight(inlineExternal)(externalCSS) : undefined,
       this.options.beautify ? beautifyHTML : undefined,
       !this.options.disableMinify && this.options.minify ? minifyHTML : undefined,
-      he.decode ].filter(element => typeof element == 'function')
-                 .reduce((res, fun) => fun(res), dom.getHTML($))
+      he.decode
+    ]
+    .filter(element => typeof element === 'function')
+    .reduce((res, fun) => fun(res), dom.getHTML($))
   }
 
 }
