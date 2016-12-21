@@ -108,7 +108,7 @@ export default function parseMjml (xml, options) {
   }
 
   const body = find(mjml.children, el => el.tagName === 'mj-body')
-  console.log(JSON.stringify(mjml))
+
   return {
     body,
     globalAttributes,
