@@ -2,12 +2,12 @@ import { MJMLElement } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-raw'
-const parentTag = ['mj-body', 'mj-container', 'mj-section', 'mj-column']
+const parentTag = [ 'mj-body', 'mj-container', 'mj-section', 'mj-column' ]
 const endingTag = true
 const rawElement = true
 const defaultMJMLDefinition = {
   attributes: {
-  }
+  },
 }
 const postRender = $ => {
   $('.mj-raw').each(function () {
@@ -37,7 +37,7 @@ class Raw extends Component {
 
     return React.createElement(this.getTagName(), {
       className: 'mj-raw',
-      dangerouslySetInnerHTML: { __html: mjContent() }
+      dangerouslySetInnerHTML: { __html: mjContent() },
     })
   }
 

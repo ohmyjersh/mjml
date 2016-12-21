@@ -2,15 +2,15 @@ import { MJMLElement } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-table'
-const parentTag = ['mj-column', 'mj-hero-content']
+const parentTag = [ 'mj-column', 'mj-hero-content' ]
 const endingTag = true
 const defaultMJMLDefinition = {
   content: '',
   attributes: {
-    'align': 'left',
-    'cellpadding': '0',
-    'cellspacing': '0',
-    'color': '#000',
+    align: 'left',
+    cellpadding: '0',
+    cellspacing: '0',
+    color: '#000',
     'container-background-color': null,
     'font-family': 'Ubuntu, Helvetica, Arial, sans-serif',
     'font-size': '13px',
@@ -19,11 +19,11 @@ const defaultMJMLDefinition = {
     'padding-left': null,
     'padding-right': null,
     'padding-top': null,
-    'padding': '10px 25px',
+    padding: '10px 25px',
     'table-layout': 'auto',
     'vertical-align': null,
-    'width': '100%'
-  }
+    width: '100%',
+  },
 }
 
 @MJMLElement
@@ -42,8 +42,8 @@ class Table extends Component {
         fontFamily: mjAttribute('font-family'),
         fontSize: defaultUnit(mjAttribute('font-size')),
         lineHeight: mjAttribute('line-height'),
-        tableLayout: mjAttribute('table-layout')
-      }
+        tableLayout: mjAttribute('table-layout'),
+      },
     }
   }
 
@@ -54,7 +54,7 @@ class Table extends Component {
       <table
         cellPadding={mjAttribute('cellpadding')}
         cellSpacing={mjAttribute('cellspacing')}
-        dangerouslySetInnerHTML={{__html: mjContent() }}
+        dangerouslySetInnerHTML={{ __html: mjContent() }}
         data-legacy-border="0"
         style={this.styles.table}
         width={mjAttribute('width')} />

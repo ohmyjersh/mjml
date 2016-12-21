@@ -2,11 +2,11 @@ import { MJMLElement, helpers } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-divider'
-const parentTag = ['mj-column', 'mj-hero-content']
+const parentTag = [ 'mj-column', 'mj-hero-content' ]
 const selfClosingTag = true
 const defaultMJMLDefinition = {
   attributes: {
-    'align': null,
+    align: null,
     'border-color': '#000000',
     'border-style': 'solid',
     'border-width': '4px',
@@ -15,16 +15,16 @@ const defaultMJMLDefinition = {
     'padding-left': null,
     'padding-right': null,
     'padding-top': null,
-    'padding': '10px 25px',
+    padding: '10px 25px',
     'vertical-align': null,
-    'width': '100%'
-  }
+    width: '100%',
+  },
 }
 const baseStyles = {
   p: {
     fontSize: '1px',
-    margin: '0px auto'
-  }
+    margin: '0px auto',
+  },
 }
 const postRender = $ => {
   $('.mj-divider-outlook').each(function () {
@@ -50,8 +50,8 @@ class Divider extends Component {
     return helpers.merge({}, baseStyles, {
       p: {
         borderTop: `${defaultUnit(mjAttribute('border-width'))} ${mjAttribute('border-style')} ${mjAttribute('border-color')}`,
-        width: defaultUnit(mjAttribute('width'))
-      }
+        width: defaultUnit(mjAttribute('width')),
+      },
     })
   }
 

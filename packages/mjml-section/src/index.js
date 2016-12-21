@@ -3,42 +3,42 @@ import cloneDeep from 'lodash/cloneDeep'
 import React, { Component } from 'react'
 
 const tagName = 'mj-section'
-const parentTag = ['mj-container']
+const parentTag = [ 'mj-container' ]
 const defaultMJMLDefinition = {
   attributes: {
     'background-color': null,
     'background-url': null,
     'background-repeat': 'repeat',
     'background-size': 'auto',
-    'border': null,
+    border: null,
     'border-bottom': null,
     'border-left': null,
     'border-radius': null,
     'border-right': null,
     'border-top': null,
-    'direction': 'ltr',
+    direction: 'ltr',
     'full-width': null,
-    'padding': '20px 0',
+    padding: '20px 0',
     'padding-top': null,
     'padding-bottom': null,
     'padding-left': null,
     'padding-right': null,
     'text-align': 'center',
-    'vertical-align': 'top'
-  }
+    'vertical-align': 'top',
+  },
 }
 const baseStyles = {
   div: {
-    margin: '0px auto'
+    margin: '0px auto',
   },
   table: {
     fontSize: '0px',
-    width: '100%'
+    width: '100%',
   },
   td: {
     textAlign: 'center',
-    verticalAlign: 'top'
-  }
+    verticalAlign: 'top',
+  },
 }
 const postRender = $ => {
   $('.mj-section-outlook-background').each(function () {
@@ -101,24 +101,18 @@ class Section extends Component {
 
   styles = this.getStyles()
 
-  isFullWidth () {
-    const { mjAttribute } = this.props
-
-    return mjAttribute('full-width') == 'full-width'
-  }
-
   getStyles () {
     const { mjAttribute, parentWidth, defaultUnit } = this.props
 
     const background = mjAttribute('background-url') ? {
-      background: `${mjAttribute('background-color') || ''} url(${mjAttribute('background-url')}) top center / ${mjAttribute('background-size') || ''} ${mjAttribute('background-repeat') || ''}`.trim()
+      background: `${mjAttribute('background-color') || ''} url(${mjAttribute('background-url')}) top center / ${mjAttribute('background-size') || ''} ${mjAttribute('background-repeat') || ''}`.trim(),
     } : {
-      background: mjAttribute('background-color')
+      background: mjAttribute('background-color'),
     }
 
     return helpers.merge({}, baseStyles, {
       table: {
-        borderRadius: defaultUnit(mjAttribute('border-radius'), "px")
+        borderRadius: defaultUnit(mjAttribute('border-radius'), 'px'),
       },
       td: {
         border: mjAttribute('border'),
@@ -134,17 +128,23 @@ class Section extends Component {
         paddingRight: defaultUnit(mjAttribute('padding-right'), 'px'),
         paddingTop: defaultUnit(mjAttribute('padding-top'), 'px'),
         textAlign: mjAttribute('text-align'),
-        verticalAlign: mjAttribute('vertical-align')
+        verticalAlign: mjAttribute('vertical-align'),
       },
       div: {
-        borderRadius: defaultUnit(mjAttribute('border-radius'), "px"),
-        maxWidth: defaultUnit(parentWidth)
-      }
+        borderRadius: defaultUnit(mjAttribute('border-radius'), 'px'),
+        maxWidth: defaultUnit(parentWidth),
+      },
     }, {
       div: this.isFullWidth() ? {} : cloneDeep(background),
       table: this.isFullWidth() ? {} : cloneDeep(background),
-      tableFullwidth: this.isFullWidth() ? cloneDeep(background) : {}
+      tableFullwidth: this.isFullWidth() ? cloneDeep(background) : {},
     })
+  }
+
+  isFullWidth () {
+    const { mjAttribute } = this.props
+
+    return mjAttribute('full-width') == 'full-width'
   }
 
   renderFullWidthSection () {

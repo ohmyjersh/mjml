@@ -2,13 +2,13 @@ import { MJMLElement, helpers } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-text'
-const parentTag = ['mj-column', 'mj-hero-content']
+const parentTag = [ 'mj-column', 'mj-hero-content' ]
 const endingTag = true
 const defaultMJMLDefinition = {
   content: '',
   attributes: {
-    'align': 'left',
-    'color': '#000000',
+    align: 'left',
+    color: '#000000',
     'container-background-color': null,
     'font-family': 'Ubuntu, Helvetica, Arial, sans-serif',
     'font-size': '13px',
@@ -16,21 +16,21 @@ const defaultMJMLDefinition = {
     'font-weight': null,
     'line-height': '22px',
     'letter-spacing': null,
-    'height': null,
+    height: null,
     'padding-bottom': null,
     'padding-left': null,
     'padding-right': null,
     'padding-top': null,
-    'padding': '10px 25px',
+    padding: '10px 25px',
     'text-decoration': null,
     'text-transform': null,
-    'vertical-align': null
-  }
+    'vertical-align': null,
+  },
 }
 const baseStyles = {
   div: {
-    cursor: 'auto'
-  }
+    cursor: 'auto',
+  },
 }
 
 const postRender = $ => {
@@ -66,12 +66,12 @@ class Text extends Component {
         fontStyle: mjAttribute('font-style'),
         fontWeight: mjAttribute('font-weight'),
         lineHeight: mjAttribute('line-height'),
-        letterSpacing: defaultUnit(mjAttribute('letter-spacing'), "px"),
-        height: defaultUnit(mjAttribute('height'), "px"),
+        letterSpacing: defaultUnit(mjAttribute('letter-spacing'), 'px'),
+        height: defaultUnit(mjAttribute('height'), 'px'),
         textAlign: mjAttribute('align'),
         textDecoration: mjAttribute('text-decoration'),
-        textTransform: mjAttribute('text-transform')
-      }
+        textTransform: mjAttribute('text-transform'),
+      },
     })
   }
 

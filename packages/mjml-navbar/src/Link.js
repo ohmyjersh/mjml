@@ -2,28 +2,28 @@ import { MJMLElement, helpers } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-link'
-const parentTag = ['mj-inline-links']
+const parentTag = [ 'mj-inline-links' ]
 const defaultMJMLDefinition = {
   attributes: {
-    'color': '#000000',
+    color: '#000000',
     'font-family': 'Ubuntu, Helvetica, Arial, sans-serif',
     'font-size': '13px',
     'font-weight': 'normal',
-    'href': null,
+    href: null,
     'line-height': '22px',
-    'padding': '15px 10px',
+    padding: '15px 10px',
     'padding-top': null,
     'padding-left': null,
     'padding-right': null,
-    'padding-bottom': null
-  }
+    'padding-bottom': null,
+  },
 }
 const baseStyles = {
   a: {
     display: 'inline-block',
     textDecoration: 'none',
-    textTransform: 'uppercase'
-  }
+    textTransform: 'uppercase',
+  },
 }
 const endingTag = true
 const postRender = $ => {
@@ -64,8 +64,8 @@ class Link extends Component {
         paddingTop: mjAttribute('padding-top'),
         paddingLeft: mjAttribute('padding-left'),
         paddingRight: mjAttribute('padding-right'),
-        paddingBottom: mjAttribute('padding-bottom')
-      }
+        paddingBottom: mjAttribute('padding-bottom'),
+      },
     })
   }
 
@@ -78,8 +78,7 @@ class Link extends Component {
         href={mjAttribute('href')}
         dangerouslySetInnerHTML={{ __html: mjContent() }}
         style={this.styles.a}
-        data-padding={this.styles.a.padding}
-      />
+        data-padding={this.styles.a.padding} />
     )
   }
 

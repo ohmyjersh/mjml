@@ -17,7 +17,7 @@ export default (content, fonts) => {
   fonts.forEach(font => {
     const {
       name,
-      url
+      url,
     } = font
 
     const regex = new RegExp(`"[^"]*font-family:[^"]*${name}[^"]*"`, 'gmi')

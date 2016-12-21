@@ -52,7 +52,7 @@ export default class MJMLRenderer {
       cssClasses: {},
       css: [],
       fonts: cloneDeep(defaultFonts),
-      title: ''
+      title: '',
     }
 
     this.content = content
@@ -73,12 +73,12 @@ export default class MJMLRenderer {
     const parser = MJMLParser(this.content, {
       endingTags: endingTags.concat([
         'mj-style',
-        'mj-title'
+        'mj-title',
       ]),
       globalAttributes: this.globalAttributes,
       MJMLHeadElements,
       addEmptyAttributes: true,
-      convertBooleans: true
+      convertBooleans: true,
     })
 
     if (parser !== null) {
@@ -112,7 +112,7 @@ export default class MJMLRenderer {
 
     if (!rootComponent) {
       return {
-        errors: this.errors
+        errors: this.errors,
       }
     }
 
@@ -129,7 +129,7 @@ export default class MJMLRenderer {
 
     return {
       errors: this.errors,
-      html: this.postRender(MJMLDocument)
+      html: this.postRender(MJMLDocument),
     }
   }
 
@@ -152,7 +152,7 @@ export default class MJMLRenderer {
       !this.options.disableMjStyle ? curryRight(inlineExternal)(externalCSS) : undefined,
       this.options.beautify ? beautifyHTML : undefined,
       !this.options.disableMinify && this.options.minify ? minifyHTML : undefined,
-      he.decode
+      he.decode,
     ]
     .filter(element => typeof element === 'function')
     .reduce((res, fun) => fun(res), dom.getHTML($))

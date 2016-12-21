@@ -8,11 +8,11 @@ export const validChildren = (element) => {
   const Component = elements[tagName]
 
   if (!Component) {
-    return;
+    return
   }
 
   if (!children || children.length == 0) {
-    return;
+    return
   }
 
   return filter(children.map((child) => {
@@ -20,11 +20,11 @@ export const validChildren = (element) => {
     const ChildComponent = elements[childTagName]
 
     if (!ChildComponent) {
-      return null;
+      return null
     }
 
     if (includes(ChildComponent.parentTag, tagName)) {
-      return null;
+      return null
     }
 
     return ruleError(`${ChildComponent.tagName} cannot be used inside ${tagName}, only inside: ${ChildComponent.parentTag.join(', ')}`, child)

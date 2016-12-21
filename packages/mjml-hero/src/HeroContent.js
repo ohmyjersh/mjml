@@ -2,25 +2,25 @@ import { MJMLElement, helpers } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-hero-content'
-const parentTag = ['mj-hero']
+const parentTag = [ 'mj-hero' ]
 const defaultMJMLDefinition = {
   attributes: {
-    'width': '100%',
-    'padding': '0px',
-    'align': 'center',
-    'background-color': 'transparent'
-  }
+    width: '100%',
+    padding: '0px',
+    align: 'center',
+    'background-color': 'transparent',
+  },
 }
 const endingTag = false
 
 const baseStyles = {
   div: {
-    float: 'center'
+    float: 'center',
   },
   table: {
     width: '100%',
-    margin: '0px'
-  }
+    margin: '0px',
+  },
 }
 
 const postRender = $ => {
@@ -41,7 +41,7 @@ const postRender = $ => {
     .removeAttr('data-align')
   })
 
-  if ($mjHeroContent.length > 0 ) {
+  if ($mjHeroContent.length > 0) {
     $('head').append(`<style type="text/css">
       @media only screen and (max-width:480px) {
         .mj-hero-content {
@@ -56,6 +56,7 @@ const postRender = $ => {
 
 @MJMLElement
 class HeroContent extends Component {
+
   styles = this.getStyles()
 
   getStyles () {
@@ -66,14 +67,14 @@ class HeroContent extends Component {
         float: mjAttribute('align'),
         margin: mjAttribute('align') === 'center' ? '0px auto' : '0px',
         width: defaultUnit(mjAttribute('width'), 'px'),
-        backgroundColor: mjAttribute('background-color')
+        backgroundColor: mjAttribute('background-color'),
       },
       td: {
         paddingTop: getPadding('top'),
         paddingLeft: getPadding('left'),
         paddingRight: getPadding('right'),
-        paddingBottom: getPadding('bottom')
-      }
+        paddingBottom: getPadding('bottom'),
+      },
     })
   }
 
@@ -91,8 +92,7 @@ class HeroContent extends Component {
           border="0"
           cellPadding="0"
           cellSpacing="0"
-          style={this.styles.table}
-          >
+          style={this.styles.table}>
           <tbody>
             <tr>
               <td style={this.styles.td}>
@@ -108,6 +108,7 @@ class HeroContent extends Component {
       </div>
     )
   }
+
 }
 
 HeroContent.tagName = tagName

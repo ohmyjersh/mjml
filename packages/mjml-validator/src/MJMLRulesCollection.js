@@ -10,9 +10,9 @@ export const registerMJRule = (rule, name) => {
   }
 
   if (name) {
-    MJMLRulesCollection[name] = rule;
+    MJMLRulesCollection[name] = rule
   } else {
-    MJMLRulesCollection[rule.name] = rule;
+    MJMLRulesCollection[rule.name] = rule
   }
 
 }

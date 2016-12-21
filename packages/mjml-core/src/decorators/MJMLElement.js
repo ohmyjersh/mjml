@@ -5,14 +5,14 @@ import React, { Component } from 'react'
 import ReactDOMServer from 'react-dom/server'
 import trim from 'lodash/trim'
 import { merge } from '../helpers'
-import hoistNonReactStatic from 'hoist-non-react-statics';
+import hoistNonReactStatic from 'hoist-non-react-statics'
 
 const getElementWidth = ({ element, siblings, parentWidth }) => {
   const { mjml } = element.props
   let { width } = element.props
 
   if (!width && mjml) {
-    width = mjml.getIn(['attributes', 'width'])
+    width = mjml.getIn([ 'attributes', 'width' ])
   }
 
   if (width == undefined) {
@@ -38,8 +38,8 @@ function createComponent (ComposedComponent) {
 
   const baseStyles = {
     td: {
-      wordBreak: 'break-word'
-    }
+      wordBreak: 'break-word',
+    },
   }
 
   class MJMLElement extends Component {
@@ -47,10 +47,8 @@ function createComponent (ComposedComponent) {
     constructor (props) {
       super(props)
 
-      this.mjml = props.mjml || Immutable.fromJS(this.constructor.defaultMJMLDefinition || {}).mergeIn(['attributes'], props)
+      this.mjml = props.mjml || Immutable.fromJS(this.constructor.defaultMJMLDefinition || {}).mergeIn([ 'attributes' ], props)
     }
-
-    mjAttribute = name => this.mjml.getIn(['attributes', name])
 
     getStyles () {
       return merge({}, baseStyles, {
@@ -61,14 +59,19 @@ function createComponent (ComposedComponent) {
           paddingTop: defaultUnit(this.mjAttribute('padding-top'), 'px'),
           paddingBottom: defaultUnit(this.mjAttribute('padding-bottom'), 'px'),
           paddingRight: defaultUnit(this.mjAttribute('padding-right'), 'px'),
-          paddingLeft: defaultUnit(this.mjAttribute('padding-left'), 'px')
-        }
+          paddingLeft: defaultUnit(this.mjAttribute('padding-left'), 'px'),
+        },
       })
     }
 
-    mjName = () =>  {
-      return this.constructor.tagName
-    }
+    getWidth = () => this.mjAttribute('rawPxWidth') || this.mjAttribute('width')
+    getParentWidth = () => this.mjAttribute('parentWidth')
+
+    isInheritedAttributes = name => this.mjml.get('inheritedAttributes') && this.mjml.get('inheritedAttributes').includes(name)
+
+    mjAttribute = name => this.mjml.getIn([ 'attributes', name ])
+
+    mjName = () => this.constructor.tagName
 
     mjContent = () => {
       const content = this.mjml.get('content')
@@ -93,10 +96,109 @@ function createComponent (ComposedComponent) {
       }, {})
     }
 
-    isInheritedAttributes = name => this.mjml.get('inheritedAttributes') && this.mjml.get('inheritedAttributes').includes(name)
+    paddingParser = (direction, prefix = '') => {
+      const paddingDirection = this.mjAttribute(`${prefix}padding-${direction}`)
+      const padding = this.mjAttribute(`${prefix}padding`)
 
-    getWidth = () => this.mjAttribute('rawPxWidth') || this.mjAttribute('width')
-    getParentWidth = () => this.mjAttribute('parentWidth')
+      if (paddingDirection != null) {
+        return parseInt(paddingDirection)
+      }
+
+      if (!padding) {
+        return 0
+      }
+
+      const paddings = padding.split(' ')
+      let directions = {}
+
+      switch (paddings.length) {
+        case 1:
+          return parseInt(padding)
+        case 2:
+          directions = { top: 0, bottom: 0, left: 1, right: 1 }
+          break
+        case 3:
+          directions = { top: 0, left: 1, right: 1, bottom: 2 }
+          break
+        case 4:
+          directions = { top: 0, right: 1, bottom: 2, left: 3 }
+          break
+      }
+
+      return parseInt(paddings[directions[direction]] || 0)
+    }
+
+    generateChildren () {
+      const { mjml: parentMjml } = this.props
+
+      if (!parentMjml) {
+        return []
+      }
+
+      return parentMjml.get('children').map((mjml, i) => {
+        const childMjml = mjml.setIn([ 'attributes', 'parentWidth' ], this.getWidth())
+
+        const tag = childMjml.get('tagName')
+        const Element = MJMLElementsCollection[tag]
+
+        if (!Element) {
+          return null
+        }
+
+        return (
+          <Element
+            key={i}
+            mjml={childMjml}
+            parentMjml={parentMjml} />
+        )
+      })
+    }
+
+    validChildren () {
+      const { children } = this.props
+      return ((children && React.Children.toArray(children)) || this.generateChildren()).filter(Boolean)
+    }
+
+    buildProps () {
+      const { parentMjml } = this.props
+
+      const childMethods = [
+        'mjAttribute',
+        'mjContent',
+        'renderWrappedOutlookChildren',
+      ]
+
+      // assign sibling count for element and children
+      if (parentMjml) {
+        siblingCount = parentMjml.get('children').size
+      }
+
+      return {
+
+        // pass all props from decorator
+        ...this.props,
+
+        // set mjName
+        mjName: this.mjName(),
+
+        // generate children
+        children: this.validChildren(),
+
+        // siblings count, can change display
+        sibling: siblingCount,
+
+        parentWidth: this.getParentWidth(),
+        getPadding: this.paddingParser,
+        defaultUnit,
+
+        // assign helpers methods
+        ...childMethods.reduce((acc, method) => ({
+          ...acc,
+          [method]: this[method],
+        }), {}),
+
+      }
+    }
 
     renderWrappedOutlookChildren = children => {
       children = React.Children.toArray(children)
@@ -128,10 +230,10 @@ function createComponent (ComposedComponent) {
         const childProps = Object.assign({}, child.props)
 
         if (childProps.mjml) {
-          childProps.mjml = childProps.mjml.setIn(['attributes', 'rawPxWidth'], elementsWidth[i])
+          childProps.mjml = childProps.mjml.setIn([ 'attributes', 'rawPxWidth' ], elementsWidth[i])
 
           if (this.mjml.get('inheritedAttributes')) {
-            childProps.mjml = childProps.mjml.mergeIn(['attributes', this.inheritedAttributes()])
+            childProps.mjml = childProps.mjml.mergeIn([ 'attributes', this.inheritedAttributes() ])
           }
         } else {
           Object.assign(childProps, { rawPxWidth: elementsWidth[i] })
@@ -154,110 +256,6 @@ function createComponent (ComposedComponent) {
       return wrappedElements
     }
 
-    paddingParser = (direction, prefix = '') => {
-      const paddingDirection = this.mjAttribute(`${prefix}padding-${direction}`)
-      const padding = this.mjAttribute(`${prefix}padding`)
-
-      if (paddingDirection != null) {
-        return parseInt(paddingDirection)
-      }
-
-      if (!padding) {
-        return 0
-      }
-
-      const paddings = padding.split(' ')
-      let directions = {}
-
-      switch (paddings.length) {
-        case 1:
-          return parseInt(padding)
-        case 2:
-          directions = {top: 0, bottom: 0, left: 1, right: 1}
-          break;
-        case 3:
-          directions = {top: 0, left: 1, right: 1, bottom: 2}
-          break;
-        case 4:
-          directions = {top: 0, right: 1, bottom: 2, left: 3}
-          break;
-      }
-
-      return parseInt(paddings[directions[direction]] || 0 )
-    }
-
-    generateChildren () {
-      const { mjml: parentMjml } = this.props
-
-      if (!parentMjml) {
-        return []
-      }
-
-      return parentMjml.get('children').map((mjml, i) => {
-        const childMjml = mjml.setIn(['attributes', 'parentWidth'], this.getWidth())
-
-        const tag = childMjml.get('tagName')
-        const Element = MJMLElementsCollection[tag]
-
-        if (!Element) {
-          return null;
-        }
-
-        return (
-          <Element
-            key={i}
-            mjml={childMjml}
-            parentMjml={parentMjml} />
-        )
-      })
-    }
-
-    validChildren () {
-      const { children } = this.props
-      return ((children && React.Children.toArray(children)) || this.generateChildren()).filter(Boolean)
-    }
-
-    buildProps () {
-      const { parentMjml } = this.props
-
-      const childMethods = [
-        'mjAttribute',
-        'mjContent',
-        'renderWrappedOutlookChildren'
-      ]
-
-      // assign sibling count for element and children
-      if (parentMjml) {
-        siblingCount = parentMjml.get('children').size
-      }
-
-      return {
-
-        // pass all props from decorator
-        ...this.props,
-
-        // set mjName
-        mjName: this.mjName(),
-
-        // generate children
-        children: this.validChildren(),
-
-        // siblings count, can change display
-        sibling: siblingCount,
-
-        parentWidth: this.getParentWidth(),
-        getPadding: this.paddingParser,
-        defaultUnit,
-
-        // assign helpers methods
-        ...childMethods.reduce((acc, method) => ({
-          ...acc,
-          [method]: this[method]
-        }), {})
-
-      }
-    }
-
     render () {
       if (this.props.columnElement && this.constructor.tagName != 'mj-raw') {
         this.styles = this.getStyles()
@@ -278,7 +276,8 @@ function createComponent (ComposedComponent) {
         <ComposedComponent {...this.buildProps()} />
       )
     }
-  }
+
+}
 
   return hoistNonReactStatic(MJMLElement, ComposedComponent)
 }

@@ -5,32 +5,32 @@ import React, { Component } from 'react'
 import uniq from 'lodash/uniq'
 
 const tagName = 'mj-column'
-const parentTag = ['mj-section', 'mj-group', 'mj-navbar']
+const parentTag = [ 'mj-section', 'mj-group', 'mj-navbar' ]
 const defaultMJMLDefinition = {
   attributes: {
-    'background': null,
+    background: null,
     'background-color': null,
-    'border': null,
+    border: null,
     'border-bottom': null,
     'border-left': null,
     'border-radius': null,
     'border-right': null,
     'border-top': null,
     'vertical-align': null,
-    'width': null
-  }
+    width: null,
+  },
 }
 const baseStyles = {
   div: {
-    verticalAlign: 'top'
-  }
+    verticalAlign: 'top',
+  },
 }
 const postRender = $ => {
   const mediaQueries = []
 
   each({
     'mj-column-per': '%',
-    'mj-column-px': 'px'
+    'mj-column-px': 'px',
   }, (unit, className) => {
     const columnWidths = []
 
@@ -75,18 +75,18 @@ class Column extends Component {
         fontSize: '13px',
         textAlign: 'left',
         verticalAlign: mjAttribute('vertical-align'),
-        width: this.getMobileWidth()
+        width: this.getMobileWidth(),
       },
       table: {
         background: mjAttribute('background-color'),
         border: mjAttribute('border'),
         borderBottom: mjAttribute('border-bottom'),
         borderLeft: mjAttribute('border-left'),
-        borderRadius: defaultUnit(mjAttribute('border-radius'), "px"),
+        borderRadius: defaultUnit(mjAttribute('border-radius'), 'px'),
         borderRight: mjAttribute('border-right'),
         borderTop: mjAttribute('border-top'),
-        verticalAlign: mjAttribute('vertical-align')
-      }
+        verticalAlign: mjAttribute('vertical-align'),
+      },
     })
   }
 
@@ -114,7 +114,7 @@ class Column extends Component {
     const { mjAttribute, sibling, parentWidth, mobileWidth } = this.props
     const width = mjAttribute('width')
 
-    if (mobileWidth != "mobileWidth" ) {
+    if (mobileWidth != 'mobileWidth') {
       return '100%'
     } else if (width == undefined) {
       return `${parseInt(100 / sibling)}%`

@@ -3,15 +3,16 @@ import React, { Component } from 'react'
 
 const tagName = 'mj-mock'
 const endingTag = true
-const parentTag = ['mj-mock-list']
+const parentTag = [ 'mj-mock-list' ]
 const defaultMJMLDefinition = {
   attributes: {
 
-  }
+  },
 }
 
 @MJMLElement
 class MockComponent extends Component {
+
   render () {
     return (
       <div className="mj-mock">
@@ -19,6 +20,7 @@ class MockComponent extends Component {
       </div>
     )
   }
+
 }
 
 MockComponent.tagName = tagName

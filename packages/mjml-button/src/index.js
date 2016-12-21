@@ -2,47 +2,47 @@ import { MJMLElement, helpers } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-button'
-const parentTag = ['mj-column', 'mj-hero-content']
+const parentTag = [ 'mj-column', 'mj-hero-content' ]
 const endingTag = true
 const defaultMJMLDefinition = {
   content: '',
   attributes: {
-    "background-color": "#414141",
-    "border": "none",
-    "border-bottom": null,
-    "border-left": null,
-    "border-radius": "3px",
-    "border-right": null,
-    "border-top": null,
-    "container-background-color": null,
-    "font-style": null,
-    "font-size": "13px",
-    "font-weight": "normal",
-    "font-family": "Ubuntu, Helvetica, Arial, sans-serif",
-    "color": "#ffffff",
-    "text-decoration": "none",
-    "text-transform": "none",
-    "align": "center",
-    "vertical-align": "middle",
-    "href": null,
-    "inner-padding": "10px 25px",
-    'padding': '10px 25px',
-    "padding-top": null,
-    "padding-bottom": null,
-    "padding-left": null,
-    "padding-right": null,
-    "width": null,
-    "height": null
-  }
+    'background-color': '#414141',
+    border: 'none',
+    'border-bottom': null,
+    'border-left': null,
+    'border-radius': '3px',
+    'border-right': null,
+    'border-top': null,
+    'container-background-color': null,
+    'font-style': null,
+    'font-size': '13px',
+    'font-weight': 'normal',
+    'font-family': 'Ubuntu, Helvetica, Arial, sans-serif',
+    color: '#ffffff',
+    'text-decoration': 'none',
+    'text-transform': 'none',
+    align: 'center',
+    'vertical-align': 'middle',
+    href: null,
+    'inner-padding': '10px 25px',
+    padding: '10px 25px',
+    'padding-top': null,
+    'padding-bottom': null,
+    'padding-left': null,
+    'padding-right': null,
+    width: null,
+    height: null,
+  },
 }
 const baseStyles = {
   table: {
-    borderCollapse: 'separate'
+    borderCollapse: 'separate',
   },
   a: {
     textDecoration: 'none',
-    lineHeight: '100%'
-  }
+    lineHeight: '100%',
+  },
 }
 
 @MJMLElement
@@ -55,20 +55,20 @@ class Button extends Component {
 
     return helpers.merge({}, baseStyles, {
       table: {
-        width: mjAttribute('width')
+        width: mjAttribute('width'),
       },
       td: {
         border: mjAttribute('border'),
         borderBottom: mjAttribute('border-bottom'),
         borderLeft: mjAttribute('border-left'),
-        borderRadius: defaultUnit(mjAttribute('border-radius'), "px"),
+        borderRadius: defaultUnit(mjAttribute('border-radius'), 'px'),
         borderRight: mjAttribute('border-right'),
         borderTop: mjAttribute('border-top'),
         color: mjAttribute('color'),
         cursor: 'auto',
         fontStyle: mjAttribute('font-style'),
         height: mjAttribute('height'),
-        padding: defaultUnit(mjAttribute('inner-padding'), "px")
+        padding: defaultUnit(mjAttribute('inner-padding'), 'px'),
       },
       a: {
         background: mjAttribute('background-color'),
@@ -79,8 +79,8 @@ class Button extends Component {
         fontWeight: mjAttribute('font-weight'),
         textDecoration: mjAttribute('text-decoration'),
         textTransform: mjAttribute('text-transform'),
-        margin: "0px"
-      }
+        margin: '0px',
+      },
     })
   }
 
@@ -119,7 +119,7 @@ class Button extends Component {
           <tr>
             <td
               data-legacy-align="center"
-              data-legacy-bgcolor={mjAttribute('background-color') === "none" ? "" : mjAttribute('background-color')}
+              data-legacy-bgcolor={mjAttribute('background-color') === 'none' ? '' : mjAttribute('background-color')}
               data-legacy-valign={mjAttribute('vertical-align')}
               style={this.styles.td}>
               {this.renderButton()}

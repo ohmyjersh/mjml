@@ -2,31 +2,31 @@ import { MJMLElement, helpers } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-invoice-item'
-const parentTag = ['mj-invoice']
+const parentTag = [ 'mj-invoice' ]
 const endingTag = true
 const defaultMJMLDefinition = {
   attributes: {
-    'color': '#747474',
+    color: '#747474',
     'font-family': 'Roboto, Ubuntu, Helvetica, Arial, sans-serif',
     'font-size': '14px',
-    'name': '',
-    'padding': '10px 20px',
-    'price': '0',
-    'quantity': '0',
-    'text-align': 'left'
-  }
+    name: '',
+    padding: '10px 20px',
+    price: '0',
+    quantity: '0',
+    'text-align': 'left',
+  },
 }
 const baseStyles = {
   td: {
     fontWeight: '500',
-    lineHeight: '1'
+    lineHeight: '1',
   },
   name: {
-    wordBreak: 'break-all'
+    wordBreak: 'break-all',
   },
   quantity: {
-    textAlign: 'right'
-  }
+    textAlign: 'right',
+  },
 }
 
 @MJMLElement
@@ -43,8 +43,8 @@ class InvoiceItem extends Component {
         fontFamily: mjAttribute('font-family'),
         fontSize: defaultUnit(mjAttribute('font-size')),
         padding: defaultUnit(mjAttribute('padding')),
-        textAlign: mjAttribute('text-align')
-      }
+        textAlign: mjAttribute('text-align'),
+      },
     })
 
     styles.name = helpers.merge({}, styles.td, styles.name)

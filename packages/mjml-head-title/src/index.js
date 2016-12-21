@@ -1,12 +1,12 @@
 export default {
   name: 'mj-title',
-  handler: (element, globalAttributes) => {
+  handler (element, globalAttributes) {
     const {
-      content
+      content,
     } = element
 
     if (content) {
       globalAttributes.title = content
     }
-  }
+  },
 }

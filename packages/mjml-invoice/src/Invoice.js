@@ -6,42 +6,44 @@ import omit from 'lodash/omit'
 import React, { Component } from 'react'
 
 const tagName = 'mj-invoice'
-const parentTag = ['mj-column']
+const parentTag = [ 'mj-column' ]
 const defaultMJMLDefinition = {
   attributes: {
-    'align': null,
-    'border': '1px solid #ecedee',
-    'color': '#b9b9b9',
+    align: null,
+    border: '1px solid #ecedee',
+    color: '#b9b9b9',
     'container-background-color': null,
     'font-family': 'Roboto, Ubuntu, Helvetica, Arial, sans-serif',
     'font-size': '13px',
-    'format': null,
-    'intl': 'name:Name;price:Price;quantity:Quantity',
-    'padding': null,
+    format: null,
+    intl: 'name:Name;price:Price;quantity:Quantity',
+    padding: null,
     'padding-top': null,
     'padding-bottom': null,
     'padding-left': null,
     'padding-right': null,
-    'line-height': '22px'
-  }
+    'line-height': '22px',
+  },
 }
 const baseStyles = {
   th: {
     fontWeight: '700',
     padding: '10px 20px',
     textAlign: 'left',
-    textTransform: 'uppercase'
-  }
+    textTransform: 'uppercase',
+  },
 }
 const intl = {
   name: 'Name',
   price: 'Price',
   quantity: 'Quantity',
-  total: 'Total:'
+  total: 'Total:',
 }
 
 @MJMLElement
 class Invoice extends Component {
+
+  styles = this.getStyles()
 
   constructor (props) {
     super(props)
@@ -54,8 +56,6 @@ class Invoice extends Component {
     this.currency = currencies[0] || null
   }
 
-  styles = this.getStyles()
-
   getStyles () {
     const { mjAttribute, defaultUnit } = this.props
 
@@ -63,28 +63,28 @@ class Invoice extends Component {
       table: {
         color: mjAttribute('color'),
         fontFamily: mjAttribute('font-family'),
-        fontSize: defaultUnit(mjAttribute('font-size'), "px"),
-        lineHeight: mjAttribute('line-height')
+        fontSize: defaultUnit(mjAttribute('font-size'), 'px'),
+        lineHeight: mjAttribute('line-height'),
       },
       th: {
         fontFamily: mjAttribute('font-family'),
-        fontSize: defaultUnit(mjAttribute('font-size'), "px"),
-        lineHeight: mjAttribute('line-height')
+        fontSize: defaultUnit(mjAttribute('font-size'), 'px'),
+        lineHeight: mjAttribute('line-height'),
       },
       thead: {
-        borderBottom: mjAttribute('border')
+        borderBottom: mjAttribute('border'),
       },
       tfoot: {
-        borderTop: mjAttribute('border')
+        borderTop: mjAttribute('border'),
       },
       total: {
         fontFamily: mjAttribute('font-family'),
-        fontSize: defaultUnit(mjAttribute('font-size'), "px"),
+        fontSize: defaultUnit(mjAttribute('font-size'), 'px'),
         fontWeight: '700',
         lineHeight: mjAttribute('line-height'),
         padding: '10px 20px',
-        textAlign: 'right'
-      }
+        textAlign: 'right',
+      },
     })
 
     styles.thQuantity = helpers.merge({}, styles.th, { textAlign: 'right' })
@@ -112,8 +112,8 @@ class Invoice extends Component {
     const currency = this.currency
 
     const total = this.items.reduce((prev, item) => {
-      const unitPrice = parseFloat(numeral().unformat(item.getIn(['attributes', 'price']))) || 0
-      const quantity = parseInt(item.getIn(['attributes', 'quantity'])) || 1
+      const unitPrice = parseFloat(numeral().unformat(item.getIn([ 'attributes', 'price' ]))) || 0
+      const quantity = parseInt(item.getIn([ 'attributes', 'quantity' ])) || 1
 
       return prev + unitPrice * quantity
     }, 0)

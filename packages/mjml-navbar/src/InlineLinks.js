@@ -4,12 +4,12 @@ import React, { Component } from 'react'
 import crypto from 'crypto'
 
 const tagName = 'mj-inline-links'
-const parentTag = ['mj-column']
+const parentTag = [ 'mj-column' ]
 const defaultMJMLDefinition = {
   attributes: {
-    'align': 'center',
+    align: 'center',
     'base-url': null,
-    'hamburger': null,
+    hamburger: null,
     'ico-align': 'center',
     'ico-open': '9776',
     'ico-close': '8855',
@@ -19,35 +19,35 @@ const defaultMJMLDefinition = {
     'ico-text-transform': 'uppercase',
     'ico-padding': '10px',
     'ico-text-decoration': 'none',
-    'ico-line-height': '30px'
-  }
+    'ico-line-height': '30px',
+  },
 }
 
 const baseStyles = {
   div: {
-    'width': '100%'
+    width: '100%',
   },
   trigger: {
     display: 'none',
     maxHeight: '0px',
     maxWidth: '0px',
     fontSize: '0px',
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   label: {
     display: 'block',
     cursor: 'pointer',
     msoHide: 'all',
     MozUserSelect: 'none',
-    userSelect: 'none'
+    userSelect: 'none',
   },
   icoOpen: {
-    msoHide: 'all'
+    msoHide: 'all',
   },
   icoClose: {
     display: 'none',
-    msoHide: 'all'
-  }
+    msoHide: 'all',
+  },
 }
 const postRender = $ => {
   $('.mj-inline-links')
@@ -103,7 +103,7 @@ class InlineLinks extends Component {
 
     return helpers.merge({}, baseStyles, {
       div: {
-        textAlign: mjAttribute('align')
+        textAlign: mjAttribute('align'),
       },
       label: {
         textAlign: mjAttribute('ico-align'),
@@ -116,8 +116,8 @@ class InlineLinks extends Component {
         paddingTop: getPadding('top', 'ico-'),
         paddingLeft: getPadding('left', 'ico-'),
         paddingRight: getPadding('right', 'ico-'),
-        paddingBottom: getPadding('bottom', 'ico-')
-      }
+        paddingBottom: getPadding('bottom', 'ico-'),
+      },
     })
   }
 
@@ -126,7 +126,7 @@ class InlineLinks extends Component {
     const baseUrl = mjAttribute('base-url')
     const perform = (mjml) => {
       if (mjml.get('tagName') === 'mj-link') {
-        mjml = mjml.setIn(['attributes', 'href'], url.resolve(baseUrl, mjml.getIn(['attributes', 'href'])))
+        mjml = mjml.setIn([ 'attributes', 'href' ], url.resolve(baseUrl, mjml.getIn([ 'attributes', 'href' ])))
       }
       return mjml
     }
@@ -178,6 +178,7 @@ class InlineLinks extends Component {
       </div>
     )
   }
+
 }
 
 InlineLinks.tagName = tagName

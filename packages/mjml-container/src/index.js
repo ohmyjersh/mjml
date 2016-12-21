@@ -2,15 +2,15 @@ import { MJMLElement, helpers } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-container'
-const parentTag = ['mj-body']
+const parentTag = [ 'mj-body' ]
 const defaultMJMLDefinition = {
   attributes: {
-    'width': '600px',
-    'background-color': null
+    width: '600px',
+    'background-color': null,
   },
   inheritedAttributes: [
-    'width'
-  ]
+    'width',
+  ],
 }
 const postRender = $ => {
   const containerWidth = $('.mj-container').data('width')
@@ -71,8 +71,8 @@ class Container extends Component {
 
     return {
       div: {
-        backgroundColor: mjAttribute('background-color')
-      }
+        backgroundColor: mjAttribute('background-color'),
+      },
     }
   }
 

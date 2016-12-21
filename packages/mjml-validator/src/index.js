@@ -12,9 +12,7 @@ const validateNode = (element) => {
 
   const { children } = element
 
-  let errors = concat(errors, ...values(rulesCollection).map(rule => {
-    return rule(element)
-  }))
+  let errors = concat(errors, ...values(rulesCollection).map(rule => rule(element)))
 
   if (children && children.length > 0) {
     errors = concat(errors, ...children.map((child) => validateNode(child)))

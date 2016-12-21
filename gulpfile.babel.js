@@ -1,13 +1,12 @@
-import _ from 'lodash'
 import { argv } from 'yargs'
 import { cd, exec, rm } from 'shelljs'
 import babel from 'gulp-babel'
 import fs from 'fs'
 import gulp from 'gulp'
+import map from 'lodash/map'
 import newer from 'gulp-newer'
 import path from 'path'
 import through from 'through2'
-
 
 const ROOT_PATH = path.resolve(__dirname)
 const PACKAGES_PATH = path.resolve(__dirname, './packages')
@@ -15,13 +14,13 @@ const packages = fs.readdirSync(PACKAGES_PATH)
   .filter(file => fs.statSync(path.resolve(PACKAGES_PATH, file)).isDirectory())
   .reduce((acc, file) => ({
     ...acc,
-    [file]: path.resolve(PACKAGES_PATH, file)
+    [file]: path.resolve(PACKAGES_PATH, file),
   }), {})
 
 const sharedDeps = [
   'lodash',
   'react-dom',
-  'react'
+  'react',
 ]
 
 let srcEx
@@ -37,18 +36,19 @@ if (path.win32 === path) {
 
 gulp.task('install', () => Promise.all(
     // Link all packages to the root
-    _.map(packages, (directory, packageName) => new Promise(resolve => {
+    map(packages, (directory, packageName) => new Promise(resolve => {
       cd(directory)
-      exec('npm link')
+      exec('yarn install')
+      exec('yarn link')
       cd(ROOT_PATH)
-      exec(`npm link ${packageName}`)
+      exec(`yarn link ${packageName}`)
       resolve()
     }))
   )
   .then(() => Promise.all(
     // Remove duplicated packages and shared dependencies so they are loaded
     // from the top
-    _.map(packages, directory => Promise.all(
+    map(packages, directory => Promise.all(
       Object.keys(packages)
         .concat(sharedDeps)
         .map(dependencyName => new Promise(resolve => {
@@ -75,20 +75,18 @@ gulp.task('build', () => {
     .pipe(gulp.dest(PACKAGES_PATH))
 })
 
-gulp.task('test', () => {
-  return Promise.all(
+gulp.task('test', () => Promise.all(
     Object.keys(packages).map(packageName => new Promise(resolve => {
       cd(packages[packageName])
       // test if there's a test directory
       exec('mocha --compilers js:babel-register')
       resolve()
     }))
-  )
-})
+  ))
 
 gulp.task('clean', () => Promise.all(
   // Remove package node_modules and lib directory
-  _.map(packages, directory => new Promise(resolve => {
+  map(packages, directory => new Promise(resolve => {
     rm('-rf', path.resolve(directory, 'node_modules'), path.resolve(directory, 'lib'))
     resolve()
   }))
@@ -97,9 +95,7 @@ gulp.task('clean', () => Promise.all(
 gulp.task('version', () => {
   // Try to derive package name from directory where this was run from
   const pwd = process.env.PWD
-  const pwdPackageName = Object.keys(packages).reduce((prev, name) => {
-    return packages[name] === pwd ? name : prev
-  }, undefined)
+  const pwdPackageName = Object.keys(packages).reduce((prev, name) => packages[name] === pwd ? name : prev, undefined)
 
   // Check params
   const packageName = argv.pkg || argv.p || pwdPackageName
@@ -123,12 +119,10 @@ gulp.task('version', () => {
   exec(`git tag ${tagName}`)
 })
 
-gulp.task('publish', ['build'], () => {
+gulp.task('publish', [ 'build' ], () => {
   // Try to derive package name from directory where this was run from
   const pwd = process.env.PWD
-  const pwdPackageName = Object.keys(packages).reduce((prev, name) => {
-    return packages[name] === pwd ? name : prev
-  }, undefined)
+  const pwdPackageName = Object.keys(packages).reduce((prev, name) => packages[name] === pwd ? name : prev, undefined)
 
   // Check params
   const packageName = argv.pkg || argv.p || pwdPackageName

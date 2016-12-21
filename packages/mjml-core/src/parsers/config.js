@@ -9,9 +9,7 @@ import { registerMJRule } from 'mjml-validator'
 
 const cwd = process.cwd()
 
-const isRelativePath = (name) => {
-  return some(['./', '.', '../'], (matcher) => startsWith(name, matcher))
-}
+const isRelativePath = (name) => some([ './', '.', '../' ], (matcher) => startsWith(name, matcher))
 
 const checkIfConfigFileExist = () => {
   try {
@@ -37,7 +35,7 @@ const parseConfigFile = () => {
 
 const parsePackages = (packages) => {
   if (!packages) {
-    return;
+    return
   }
 
   packages.forEach(file => {
@@ -58,7 +56,7 @@ const parsePackages = (packages) => {
 
 const parseRules = (validators) => {
   if (!validators) {
-    return;
+    return
   }
 
   validators.forEach(file => {
@@ -81,7 +79,7 @@ export default () => {
   const config = parseConfigFile()
 
   if (!config) {
-    return;
+    return
   }
 
   parsePackages(config.packages)

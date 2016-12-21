@@ -52,8 +52,8 @@ const stdinToBuffer = (stream, callback) => {
  * write: write to a file
  * read: read a fileexists: ensure the file exists
  */
-const write     = promisify(fs.writeFile)
-const read      = promisify(fs.readFile)
+const write = promisify(fs.writeFile)
+const read = promisify(fs.readFile)
 const readStdin = promisify(stdinToBuffer)
 
 /*
@@ -73,7 +73,7 @@ const render = (bufferPromise, { min, output, stdout, fileName, level }) => {
     })
     .catch(e => {
       if (e.getMessages) {
-        return error(`${fileName ? `File: ${fileName} \n` : ``}${e.getMessages()}`)
+        return error(`${fileName ? `File: ${fileName} \n` : ''}${e.getMessages()}`)
       }
 
       return error(e)
@@ -105,7 +105,7 @@ export const renderFile = (input, options) => {
           output = `${outFile}${outputExtension}`
         }
       } else {
-        output = `${inFile}${path.extname(inFile) || ".html"}`
+        output = `${inFile}${path.extname(inFile) || '.html'}`
       }
 
       const filePath = path.resolve(process.cwd(), file)
@@ -128,7 +128,7 @@ export const renderStream = options => render(readStdin(process.stdin), options)
 
 const availableOutputFormat = {
   json: JSON.stringify,
-  text: (errs) => errs.map(e => e.formattedMessage).join('\n')
+  text: (errs) => errs.map(e => e.formattedMessage).join('\n'),
 }
 
 /**
@@ -144,9 +144,7 @@ export const validate = (input, { format }) => {
 
       process.stdout.write(outputFormat(report))
     })
-    .catch(e => {
-      return error(`Error: ${e}`)
-    })
+    .catch(e => error(`Error: ${e}`))
 }
 
 /*

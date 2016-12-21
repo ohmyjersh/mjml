@@ -5,91 +5,91 @@ import repeat from 'lodash/repeat'
 import min from 'lodash/min'
 
 const tagName = 'mj-carousel'
-const parentTag = ['mj-column', 'mj-hero-content']
+const parentTag = [ 'mj-column', 'mj-hero-content' ]
 const defaultMJMLDefinition = {
   attributes: {
-    'align': 'center',
+    align: 'center',
     'border-radius': '6px',
     'icon-width': '44px',
     'left-icon': 'http://i.imgur.com/xTh3hln.png',
-    'padding': null,
+    padding: null,
     'padding-top': null,
     'padding-bottom': null,
     'padding-left': null,
     'padding-right': null,
     'right-icon': 'http://i.imgur.com/os7o9kz.png',
-    'thumbnails': 'visible',
+    thumbnails: 'visible',
     'tb-border': '2px solid transparent',
     'tb-border-radius': '6px',
     'tb-hover-border-color': '#fead0d',
     'tb-selected-border-color': '#ccc',
-    'tb-width': null
-  }
+    'tb-width': null,
+  },
 }
 const baseStyles = {
   carousel: {
     div: {
       display: 'table',
-      width:' 100%',
+      width: ' 100%',
       tableLayout: 'fixed',
       textAlign: 'center',
-      fontSize: '0'
+      fontSize: '0',
     },
     table: {
       captionSide: 'top',
       display: 'table-caption',
       tableLayout: 'fixed',
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   controls: {
     div: {
       display: 'none',
-      msoHide: 'all'
+      msoHide: 'all',
     },
     img: {
       display: 'block',
       width: '100%',
-      height: 'auto'
+      height: 'auto',
     },
     td: {
       display: 'none',
-      msoHide: 'all'
-    }
+      msoHide: 'all',
+    },
   },
   images: {
     div: {
-      padding: '20px'
+      padding: '20px',
     },
     firstImageDiv: {},
     img: {
       display: 'block',
       width: '600px',
       maxWidth: '100%',
-      height: 'auto'
+      height: 'auto',
     },
     otherImageDiv: {
       display: 'none',
-      msoHide: 'all'
-    }
+      msoHide: 'all',
+    },
   },
   radio: {
     input: {
       display: 'none',
-      msoHide: 'all'
-    }
+      msoHide: 'all',
+    },
   },
   thumbnails: {
     a: {
       display: 'inline-block',
-      overflow: 'hidden'
+      overflow: 'hidden',
     },
     img: {
       display: 'block',
       width: '100%',
-      height: 'auto'
-    }
-  }
+      height: 'auto',
+    },
+  },
 }
 const postRender = $ => {
   const $mjCarousel = $('.mj-carousel')
@@ -124,11 +124,11 @@ const postRender = $ => {
     touch-action: manipulation;
   }
 
-  ${range(0, length).map(i => `.mj-carousel-radio:checked ${repeat('+ * ', i)}+ .mj-carousel-content .mj-carousel-image` ).join(',')} {
+  ${range(0, length).map(i => `.mj-carousel-radio:checked ${repeat('+ * ', i)}+ .mj-carousel-content .mj-carousel-image`).join(',')} {
     display: none !important;
   }
 
-  ${range(0, length).map(i => `.mj-carousel-radio-${i + 1}:checked ${repeat('+ * ', length - i - 1)}+ .mj-carousel-content .mj-carousel-image-${i + 1}` ).join(',')} {
+  ${range(0, length).map(i => `.mj-carousel-radio-${i + 1}:checked ${repeat('+ * ', length - i - 1)}+ .mj-carousel-content .mj-carousel-image-${i + 1}`).join(',')} {
     display: block !important;
   }
 
@@ -139,7 +139,7 @@ const postRender = $ => {
     display: block !important;
   }
 
-  ${range(0, length).map(i => `.mj-carousel-radio-${i + 1}:checked ${repeat('+ * ', length - i - 1)}+ .mj-carousel-content .mj-carousel-thumbnail-${i + 1}` ).join(',')} {
+  ${range(0, length).map(i => `.mj-carousel-radio-${i + 1}:checked ${repeat('+ * ', length - i - 1)}+ .mj-carousel-content .mj-carousel-thumbnail-${i + 1}`).join(',')} {
     border-color: ${$mjCarousel.data('selected-border-color')} !important;
   }
 
@@ -156,7 +156,7 @@ const postRender = $ => {
     border-color: ${$mjCarousel.data('hover-border-color')} !important;
   }
 
-  ${range(0, length).map(i => `.mj-carousel-thumbnail-${i + 1}:hover ${repeat('+ * ', length - i - 1)}+ .mj-carousel-main .mj-carousel-image-${i + 1}` ).join(',')} {
+  ${range(0, length).map(i => `.mj-carousel-thumbnail-${i + 1}:hover ${repeat('+ * ', length - i - 1)}+ .mj-carousel-main .mj-carousel-image-${i + 1}`).join(',')} {
     display: block !important;
   }
   </style>`
@@ -186,7 +186,7 @@ const postRender = $ => {
   $('head').append(carouselCss)
   $('head').append(fallback)
 
-  $('.mj-carousel').before(`<!--[if !mso]><!-->`)
+  $('.mj-carousel').before('<!--[if !mso]><!-->')
   $('.mj-carousel').after(`${helpers.endNegationConditionalTag}
     <!--[if mso]>
     ${$('.mj-carousel-image-1').html()}
@@ -204,52 +204,50 @@ class Carousel extends Component {
     return helpers.merge({}, baseStyles, {
       images: {
         img: {
-          borderRadius: mjAttribute('border-radius')
-        }
+          borderRadius: mjAttribute('border-radius'),
+        },
       },
       thumbnails: {
         img: {
-          borderRadius: mjAttribute('tb-border-radius')
+          borderRadius: mjAttribute('tb-border-radius'),
         },
         a: {
           border: mjAttribute('tb-border'),
           borderRadius: mjAttribute('tb-border-radius'),
-          width: this.thumbnailsWidth()
-        }
-      }
+          width: this.thumbnailsWidth(),
+        },
+      },
     })
   }
 
   thumbnailsWidth () {
     const { mjAttribute } = this.props
 
-    return mjAttribute('tb-width') ? mjAttribute('tb-width') : `${min([mjAttribute('parentWidth') / this.images.size, 110])}px`
+    return mjAttribute('tb-width') ? mjAttribute('tb-width') : `${min([ mjAttribute('parentWidth') / this.images.size, 110 ])}px`
   }
 
   generateRadio () {
-    return this.images.map(({src}, index) => {
-      return (
-        <input
-          key={`mj-carousel-radio-${index + 1}`}
-          className={`mj-carousel-radio mj-carousel-radio-${index + 1}`}
-          defaultChecked={index === 0}
-          type="radio" name="mj-carousel-radio"
-          id={`mj-carousel-radio-${index + 1}`}
-          style={this.styles.radio.input} />
-      )
-    })
+    return this.images.map(({ src }, index) => (
+      <input
+        key={`mj-carousel-radio-${index + 1}`}
+        className={`mj-carousel-radio mj-carousel-radio-${index + 1}`}
+        defaultChecked={index === 0}
+        type="radio" name="mj-carousel-radio"
+        id={`mj-carousel-radio-${index + 1}`}
+        style={this.styles.radio.input} />
+      ))
   }
 
   generateThumbnails () {
     const imgWidth = this.thumbnailsWidth()
 
-    return this.images.map(({src, alt, 'thumbnails-src': thumbsSrc}, index) => {
+    return this.images.map(({ src, alt, 'thumbnails-src': thumbsSrc }, index) => {
       const imgIndex = index + 1
 
       return (
         <a style={this.styles.thumbnails.a} key={`mj-carousel-thumbnail-${imgIndex}`} href={`#${imgIndex}`} className={`mj-carousel-thumbnail mj-carousel-thumbnail-${imgIndex}`}>
           <label htmlFor={`mj-carousel-radio-${imgIndex}`}>
-            <img src={thumbsSrc || src } alt={alt} style={this.styles.thumbnails.img} width={parseInt(imgWidth)} />
+            <img src={thumbsSrc || src} alt={alt} style={this.styles.thumbnails.img} width={parseInt(imgWidth)} />
           </label>
         </a>
       )
@@ -263,16 +261,14 @@ class Carousel extends Component {
     return (
       <td className="mj-carousel-icons-cell" style={this.styles.controls.td}>
         <div className={`mj-carousel-${classAffix}-icons`} style={this.styles.controls.div}>
-          { range(1, this.images.size + 1).map(i => {
-            return (
-              <label
-                key={`mj-carousel-radio-${i}`}
-                htmlFor={`mj-carousel-radio-${i}`}
-                className={`mj-carousel-${classAffix} mj-carousel-${classAffix}-${i}`}>
-                <img src={icon}alt="" style={this.styles.controls.img} width={iconWidth} />
-              </label>
-            )
-          }) }
+          { range(1, this.images.size + 1).map(i => (
+            <label
+              key={`mj-carousel-radio-${i}`}
+              htmlFor={`mj-carousel-radio-${i}`}
+              className={`mj-carousel-${classAffix} mj-carousel-${classAffix}-${i}`}>
+              <img src={icon}alt="" style={this.styles.controls.img} width={iconWidth} />
+            </label>
+            )) }
         </div>
       </td>
     )
@@ -282,7 +278,7 @@ class Carousel extends Component {
     return (
       <td>
         <div className="mj-carousel-images" style={this.styles.images.div}>
-          { this.images.map(({src, alt, href}, index) => {
+          { this.images.map(({ src, alt, href }, index) => {
             const image = <img src={src} alt={alt} style={this.styles.images.img} width="400" border="0" />
 
             return (
@@ -337,12 +333,13 @@ class Carousel extends Component {
         data-selected-border-color={mjAttribute('tb-selected-border-color')}>
         {this.generateRadio()}
         <div className="mj-carousel-content" style={this.styles.carousel.div}>
-          {mjAttribute('thumbnails') == "visible" ? this.generateThumbnails() : null}
+          {mjAttribute('thumbnails') == 'visible' ? this.generateThumbnails() : null}
           {this.generateCarousel()}
         </div>
       </div>
     )
   }
+
 }
 
 Carousel.tagName = tagName

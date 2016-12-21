@@ -2,25 +2,25 @@ import { MJMLElement, helpers } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-group'
-const parentTag = ['mj-section', 'mj-navbar']
+const parentTag = [ 'mj-section', 'mj-navbar' ]
 const defaultMJMLDefinition = {
   attributes: {
-    'width': null,
+    width: null,
     'background-color': null,
-    'vertical-align': null
-  }
+    'vertical-align': null,
+  },
 }
 const baseStyles = {
   div: {
-    verticalAlign: 'top'
-  }
+    verticalAlign: 'top',
+  },
 }
 const postRender = $ => {
   $('.mj-group-outlook-open').each(function () {
     const $parent = $(this).parent()
     const mjGroupBg = $parent.data('mj-group-background')
     const $columnDiv = $(this).next()
-    const bgColor = mjGroupBg ? `bgcolor="${mjGroupBg}"` : ``
+    const bgColor = mjGroupBg ? `bgcolor="${mjGroupBg}"` : ''
 
     $(this).replaceWith(`${helpers.startConditionalTag}
       <table ${bgColor} role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td style="vertical-align:${$columnDiv.data('vertical-align')};width:${parseInt($(this).data('width'))}px;">
@@ -65,8 +65,8 @@ class Group extends Component {
         fontSize: '0px',
         lineHeight: '0px',
         textAlign: 'left',
-        width: '100%'
-      }
+        width: '100%',
+      },
     })
   }
 
@@ -94,7 +94,7 @@ class Group extends Component {
   renderChildren () {
     const { children } = this.props
 
-    return children.map(child => React.cloneElement(child, { mobileWidth: "mobileWidth" }))
+    return children.map(child => React.cloneElement(child, { mobileWidth: 'mobileWidth' }))
   }
 
   render () {

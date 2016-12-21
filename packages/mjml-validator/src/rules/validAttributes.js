@@ -12,15 +12,15 @@ export const validateAttribute = (element) => {
   const Component = elements[tagName]
 
   if (!Component) {
-    return;
+    return
   }
 
   const availableAttributes = concat(keys(Component.defaultMJMLDefinition.attributes), WHITELIST)
-  const unknownAttributes = filter(keys(attributes), attribute => !includes(availableAttributes, attribute) )
+  const unknownAttributes = filter(keys(attributes), attribute => !includes(availableAttributes, attribute))
 
   if (unknownAttributes.length == 0) {
-    return;
+    return
   }
 
-  return ruleError(`${unknownAttributes.length > 1 ? "Attributes" : "Attribute"} ${unknownAttributes.join(', ')} ${unknownAttributes.length > 1 ? "are illegal" : "is illegal"}`, element)
+  return ruleError(`${unknownAttributes.length > 1 ? 'Attributes' : 'Attribute'} ${unknownAttributes.join(', ')} ${unknownAttributes.length > 1 ? 'are illegal' : 'is illegal'}`, element)
 }

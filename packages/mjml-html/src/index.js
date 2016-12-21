@@ -2,25 +2,25 @@ import { MJMLElement, helpers } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-html'
-const parentTag = ['mj-column', 'mj-hero-content']
+const parentTag = [ 'mj-column', 'mj-hero-content' ]
 const endingTag = true
 const defaultMJMLDefinition = {
   content: '',
   attributes: {
-    'align': null,
+    align: null,
     'container-background-color': null,
     'padding-bottom': null,
     'padding-left': null,
     'padding-right': null,
     'padding-top': null,
-    'padding': '0px',
-    'vertical-align': null
-  }
+    padding: '0px',
+    'vertical-align': null,
+  },
 }
 const baseStyles = {
   div: {
-    fontSize: '13px'
-  }
+    fontSize: '13px',
+  },
 }
 
 @MJMLElement

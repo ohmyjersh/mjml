@@ -11,7 +11,7 @@ export const registerMJElement = Component => {
     return warning(false, 'Component has no tagName')
   }
 
-  endingTag  && !includes(endingTags, tagName) && endingTags.push(tagName)
+  endingTag && !includes(endingTags, tagName) && endingTags.push(tagName)
   postRender && postRenders.push(postRender)
 
   MJMLElementsCollection[tagName] = Component

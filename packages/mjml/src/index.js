@@ -27,7 +27,7 @@ import MJHeadTitle from 'mjml-head-title'
 
 const { Hero, HeroContent } = MJHero
 const { Invoice, InvoiceItem } = MJInvoice
-const { Carousel, CarouselImage } = MJCarousel;
+const { Carousel, CarouselImage } = MJCarousel
 const { Navbar, InlineLinks, Link } = MJNavbar;
 
 [ Button,
@@ -58,6 +58,6 @@ const { Navbar, InlineLinks, Link } = MJNavbar;
 [ MJHeadAttributes,
   MJHeadFont,
   MJHeadStyle,
-  MJHeadTitle ].map( headElement => registerMJHeadElement(headElement.name, headElement.handler))
+  MJHeadTitle ].map(headElement => registerMJHeadElement(headElement.name, headElement.handler))
 
 export * from 'mjml-core'

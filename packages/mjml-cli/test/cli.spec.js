@@ -36,12 +36,10 @@ const format = input => {
  * Starts by reading the files using the promise version of fs, then formats it for an easy comparison
  */
 const compareFiles = (fileToCompare, expectedFile) => {
-  const files = [fileToCompare, expectedFile]
+  const files = [ fileToCompare, expectedFile ]
 
-  return Promise.all(files.map(file => {
-    return fsp.readFile(file, { encoding:'utf8' })
-      .then(fileContent => format(fileContent))
-  }))
+  return Promise.all(files.map(file => fsp.readFile(file, { encoding: 'utf8' })
+      .then(fileContent => format(fileContent))))
     .then(filesContentFormatted => {
       expect(filesContentFormatted[0]).to.equal(filesContentFormatted[1])
     })

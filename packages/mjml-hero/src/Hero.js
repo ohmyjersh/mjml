@@ -2,46 +2,46 @@ import { MJMLElement, helpers } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-hero'
-const parentTag = ['mj-container']
+const parentTag = [ 'mj-container' ]
 const defaultMJMLDefinition = {
   attributes: {
-    'mode': 'fixed-height',
-    'height': '0px',
+    mode: 'fixed-height',
+    height: '0px',
     'background-url': null,
     'background-width': '0px',
     'background-height': '0px',
     'background-position': 'center center',
-    'padding': '0px',
+    padding: '0px',
     'padding-bottom': null,
     'padding-left': null,
     'padding-right': null,
     'padding-top': null,
     'background-color': '#ffffff',
-    'vertical-align': 'top'
-  }
+    'vertical-align': 'top',
+  },
 }
 
 const endingTag = false
 const baseStyles = {
   div: {
-    margin: '0 auto'
+    margin: '0 auto',
   },
   table: {
-    width: '100%'
+    width: '100%',
   },
   tr: {
-    verticalAlign: 'top'
+    verticalAlign: 'top',
   },
   edge: {
     paddingBottom: '0%',
     width: '0.01%',
-    msoPaddingBottomAlt: 0
+    msoPaddingBottomAlt: 0,
   },
   hero: {
     backgroundRepeat: 'no-repeat',
     verticalAlign: 'top',
-    backgroundSize: 'cover'
-  }
+    backgroundSize: 'cover',
+  },
 }
 
 const postRender = $ => {
@@ -126,14 +126,14 @@ class Hero extends Component {
       switch (backgroundPositionTop) {
         case 'top':
           cropBottom = Math.round((backgroundHeight - height) / backgroundHeight * 100) / 100
-          break;
+          break
         case 'center':
           cropTop = Math.round((backgroundHeight - height) / 2 / backgroundHeight * 100) / 100
           cropBottom = cropTop
           break
         case 'bottom':
           cropTop = Math.round((backgroundHeight - height) / backgroundHeight * 100) / 100
-          break;
+          break
       }
     }
 
@@ -156,7 +156,7 @@ class Hero extends Component {
     background += mjAttribute('background-url') ? `url(${mjAttribute('background-url')}) ` : ''
     background += 'no-repeat '
     background += `${mjAttribute('background-position')} `
-    background +=  '/ cover'
+    background += '/ cover'
 
     return background
   }
@@ -173,10 +173,10 @@ class Hero extends Component {
 
     return helpers.merge({}, baseStyles, {
       div: {
-        maxWidth: defaultUnit(width, 'px')
+        maxWidth: defaultUnit(width, 'px'),
       },
       edge: {
-        paddingBottom: `${backgroundRatio}%`
+        paddingBottom: `${backgroundRatio}%`,
       },
       hero: {
         background: backgroundStyle,
@@ -185,8 +185,8 @@ class Hero extends Component {
         paddingRight: getPadding('right'),
         paddingBottom: getPadding('bottom'),
         backgroundPosition: mjAttribute('background-position'),
-        verticalAlign: mjAttribute('vertical-align')
-      }
+        verticalAlign: mjAttribute('vertical-align'),
+      },
     })
   }
 

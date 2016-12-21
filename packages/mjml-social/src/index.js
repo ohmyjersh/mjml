@@ -4,18 +4,18 @@ import clone from 'lodash/clone'
 import React, { Component } from 'react'
 
 const tagName = 'mj-social'
-const parentTag = ['mj-column', 'mj-hero-content']
+const parentTag = [ 'mj-column', 'mj-hero-content' ]
 const selfClosingTag = true
 const defaultMJMLDefinition = {
   attributes: {
-    'align': 'center',
+    align: 'center',
     'base-url': 'https://www.mailjet.com/images/theme/v1/icons/ico-social/',
-    'color': '#333333',
+    color: '#333333',
     'container-background-color': null,
-    'display': 'facebook:share twitter:share google:share',
+    display: 'facebook:share twitter:share google:share',
     'facebook-content': 'Share',
     'facebook-href': '[[SHORT_PERMALINK]]',
-    'facebook-icon-color' : '#3b5998',
+    'facebook-icon-color': '#3b5998',
     'font-family': 'Ubuntu, Helvetica, Arial, sans-serif',
     'font-size': '13px',
     'google-content': '+1',
@@ -29,13 +29,13 @@ const defaultMJMLDefinition = {
     'line-height': '22px',
     'linkedin-content': 'Share',
     'linkedin-href': '[[SHORT_PERMALINK]]',
-    'linkedin-icon-color' : '#0077b5',
-    'mode': 'horizontal',
+    'linkedin-icon-color': '#0077b5',
+    mode: 'horizontal',
     'padding-bottom': null,
     'padding-left': null,
     'padding-right': null,
     'padding-top': null,
-    'padding': '10px 25px',
+    padding: '10px 25px',
     'pinterest-content': 'Pin it',
     'pinterest-href': '[[SHORT_PERMALINK]]',
     'pinterest-icon-color': '#bd081c',
@@ -44,64 +44,64 @@ const defaultMJMLDefinition = {
     'twitter-content': 'Tweet',
     'twitter-href': '[[SHORT_PERMALINK]]',
     'twitter-icon-color': '#55acee',
-    'vertical-align': null
-  }
+    'vertical-align': null,
+  },
 }
 const baseStyles = {
   tableHorizontal: {
     float: 'none',
-    display: 'inline-table'
+    display: 'inline-table',
   },
   tableVertical: {
-    margin: '0px'
+    margin: '0px',
   },
   td1: {
     padding: '4px',
-    verticalAlign: 'middle'
+    verticalAlign: 'middle',
   },
-  td2:  {
-    verticalAlign: 'middle'
+  td2: {
+    verticalAlign: 'middle',
   },
   tdText: {
     padding: '4px 4px 4px 0',
-    verticalAlign: 'middle'
+    verticalAlign: 'middle',
   },
   a: {
     textDecoration: 'none',
     textAlign: 'left',
     display: 'block',
-    borderRadius: '3px'
+    borderRadius: '3px',
   },
   img: {
     display: 'block',
-    borderRadius: '3px'
-  }
+    borderRadius: '3px',
+  },
 }
 const buttonDefinitions = {
   facebook: {
     linkAttribute: 'https://www.facebook.com/sharer/sharer.php?u=[[URL]]',
-    icon: 'facebook.png'
+    icon: 'facebook.png',
   },
   twitter: {
     linkAttribute: 'https://twitter.com/home?status=[[URL]]',
-    icon: 'twitter.png'
+    icon: 'twitter.png',
   },
   google: {
     linkAttribute: 'https://plus.google.com/share?url=[[URL]]',
-    icon: 'google-plus.png'
+    icon: 'google-plus.png',
   },
   pinterest: {
     linkAttribute: 'https://pinterest.com/pin/create/button/?url=[[URL]]&amp;media=&amp;description=',
-    icon: 'pinterest.png'
+    icon: 'pinterest.png',
   },
   linkedin: {
     linkAttribute: 'https://www.linkedin.com/shareArticle?mini=true&amp;url=[[URL]]&amp;title=&amp;summary=&amp;source=',
-    icon: 'linkedin.png'
+    icon: 'linkedin.png',
   },
   instagram: {
     linkAttribute: '[[URL]]',
-    icon: 'instagram.png'
-  }
+    icon: 'instagram.png',
+  },
 }
 const postRender = $ => {
   $('.mj-social-outlook-open').each(function () {
@@ -141,16 +141,33 @@ class Social extends Component {
         fontStyle: mjAttribute('font-style'),
         fontWeight: mjAttribute('font-weight'),
         lineHeight: mjAttribute('line-height'),
-        textDecoration: mjAttribute('text-decoration')
+        textDecoration: mjAttribute('text-decoration'),
       },
       td1: {
-        padding: defaultUnit(mjAttribute('inner-padding'))
+        padding: defaultUnit(mjAttribute('inner-padding')),
       },
       td2: {
         width: defaultUnit(mjAttribute('icon-size'), 'px'),
-        height: defaultUnit(mjAttribute('icon-size'), 'px')
-      }
+        height: defaultUnit(mjAttribute('icon-size'), 'px'),
+      },
     })
+  }
+
+  getDefinitionForPlatform (platform) {
+    const { mjAttribute } = this.props
+
+    if (buttonDefinitions[platform]) {
+      return tap(clone(buttonDefinitions[platform]), buttonDefinition => buttonDefinition.icon = mjAttribute('base-url') + buttonDefinition.icon)
+    }
+
+    if (!mjAttribute(`${platform}-icon-color`) || !mjAttribute(`${platform}-icon`) || !mjAttribute(`${platform}-href`) || (this.isInTextMode() && !mjAttribute(`${platform}-content`))) {
+      return
+    }
+
+    return {
+      linkAttribute: '[[URL]]',
+      icon: mjAttribute(`${platform}-icon`),
+    }
   }
 
   isHorizontal () {
@@ -173,7 +190,7 @@ class Social extends Component {
     const iconStyle = {
       background: mjAttribute(`${platform}-icon-color`),
       borderRadius: this.styles.img.borderRadius,
-      width: mjAttribute('icon-size')
+      width: mjAttribute('icon-size'),
     }
 
     return (
@@ -213,23 +230,6 @@ class Social extends Component {
     )
   }
 
-  getDefinitionForPlatform (platform) {
-    const { mjAttribute } = this.props
-
-    if (buttonDefinitions[platform]) {
-      return tap(clone(buttonDefinitions[platform]), buttonDefinition => buttonDefinition.icon = mjAttribute('base-url') + buttonDefinition.icon)
-    }
-
-    if (!mjAttribute(`${platform}-icon-color`) || !mjAttribute(`${platform}-icon`) || !mjAttribute(`${platform}-href`) || (this.isInTextMode() && !mjAttribute(`${platform}-content`)) ) {
-      return
-    }
-
-    return {
-      linkAttribute: "[[URL]]",
-      icon: mjAttribute(`${platform}-icon`)
-    }
-  }
-
   renderSocialButtons () {
     const { mjAttribute } = this.props
     const platforms = mjAttribute('display')
@@ -252,27 +252,25 @@ class Social extends Component {
 
   renderHorizontal () {
     const { mjAttribute } = this.props
-    const socialButtons = this.renderSocialButtons().map((socialButton, index) => {
-      return (
-        <table
-          role="presentation"
-          cellPadding="0"
-          cellSpacing="0"
-          data-legacy-align={mjAttribute('align')}
-          data-legacy-border="0"
-          key={`wrapped-social-button-${index}`}
-          style={this.styles.tableHorizontal}>
-          <tbody>
-            {socialButton}
-          </tbody>
-        </table>
-      )
-    }).reduce((result, socialButton, index) => {
-      result.push(socialButton)
-      result.push(<div className="mj-social-outlook-line" key={`outlook-line-${index}`} />)
+    const socialButtons = this.renderSocialButtons().map((socialButton, index) => (
+      <table
+        role="presentation"
+        cellPadding="0"
+        cellSpacing="0"
+        data-legacy-align={mjAttribute('align')}
+        data-legacy-border="0"
+        key={`wrapped-social-button-${index}`}
+        style={this.styles.tableHorizontal}>
+        <tbody>
+          {socialButton}
+        </tbody>
+      </table>
+      )).reduce((result, socialButton, index) => {
+        result.push(socialButton)
+        result.push(<div className="mj-social-outlook-line" key={`outlook-line-${index}`} />)
 
-      return result
-    }, [<div className="mj-social-outlook-open" key="outlook-open" data-legacy-align={mjAttribute('align')} />])
+        return result
+      }, [ <div className="mj-social-outlook-open" key="outlook-open" data-legacy-align={mjAttribute('align')} /> ])
 
     socialButtons[socialButtons.length - 1] = <div className="mj-social-outlook-close" key="outlook-close" />
 

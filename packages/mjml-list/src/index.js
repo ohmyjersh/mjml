@@ -2,13 +2,13 @@ import { MJMLElement, helpers } from 'mjml-core'
 import React, { Component } from 'react'
 
 const tagName = 'mj-list'
-const parentTag = ['mj-column', 'mj-hero-content']
+const parentTag = [ 'mj-column', 'mj-hero-content' ]
 const endingTag = true
 const defaultMJMLDefinition = {
   content: '',
   attributes: {
-    'align': 'left',
-    'color': '#000000',
+    align: 'left',
+    color: '#000000',
     'container-background-color': null,
     'font-family': 'Ubuntu, Helvetica, Arial, sans-serif',
     'font-size': '13px',
@@ -17,16 +17,16 @@ const defaultMJMLDefinition = {
     'padding-left': null,
     'padding-right': null,
     'padding-top': null,
-    'padding': '10px 25px',
-    'vertical-align': null
-  }
+    padding: '10px 25px',
+    'vertical-align': null,
+  },
 }
 const baseStyles = {
   ul: {
     display: 'inline-block',
     paddingLeft: '20px',
-    textAlign: 'left'
-  }
+    textAlign: 'left',
+  },
 }
 
 @MJMLElement
@@ -42,8 +42,8 @@ class List extends Component {
         color: mjAttribute('color'),
         fontFamily: mjAttribute('font-family'),
         fontSize: defaultUnit(mjAttribute('font-size')),
-        lineHeight: mjAttribute('line-height')
-      }
+        lineHeight: mjAttribute('line-height'),
+      },
     })
   }
 

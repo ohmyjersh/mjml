@@ -4,14 +4,14 @@ import MJMLText from 'mjml-text'
 import React, { Component } from 'react'
 
 const tagName = 'mj-location'
-const parentTag = ['mj-column', 'mj-hero-content']
+const parentTag = [ 'mj-column', 'mj-hero-content' ]
 const endingTag = true
 const selfClosingTag = true
 const defaultMJMLDefinition = {
   attributes: {
-    'address': null,
-    'align': null,
-    'color': '#3aa7ed',
+    address: null,
+    align: null,
+    color: '#3aa7ed',
     'container-background-color': null,
     'font-family': 'Roboto, sans-serif',
     'font-size': '18px',
@@ -21,9 +21,9 @@ const defaultMJMLDefinition = {
     'padding-left': null,
     'padding-right': null,
     'padding-top': null,
-    'padding': '10px 25px',
-    'vertical-align': null
-  }
+    padding: '10px 25px',
+    'vertical-align': null,
+  },
 }
 
 @MJMLElement
@@ -37,8 +37,8 @@ class Location extends Component {
     return {
       text: {
         color: mjAttribute('color'),
-        textDecoration: 'none'
-      }
+        textDecoration: 'none',
+      },
     }
   }
 
@@ -47,18 +47,18 @@ class Location extends Component {
 
     return {
       text: {
-        'columnElement': true,
+        columnElement: true,
         'font-family': mjAttribute('font-family'),
         'font-size': defaultUnit(mjAttribute('font-size')),
         'font-weight': mjAttribute('font-weight'),
-        'padding': '0px',
-        'text-decoration': mjAttribute('text-decoration')
+        padding: '0px',
+        'text-decoration': mjAttribute('text-decoration'),
       },
       img: {
-        'columnElement': true,
-        'padding': '0px',
-        'src': mjAttribute('img-src')
-      }
+        columnElement: true,
+        padding: '0px',
+        src: mjAttribute('img-src'),
+      },
     }
   }
 
@@ -94,6 +94,7 @@ class Location extends Component {
       </table>
     )
   }
+
 }
 
 Location.tagName = tagName

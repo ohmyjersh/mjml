@@ -1,7 +1,7 @@
 export const removeCDATA = str => str.replace(/<!--\[CDATA\[([^]*?)\]\]-->/gm, '$1')
 
 export const fixLegacyAttrs = $ => {
-  const legacyAttrs = ['align', 'valign', 'bgcolor', 'border', 'background']
+  const legacyAttrs = [ 'align', 'valign', 'bgcolor', 'border', 'background' ]
 
   // https://github.com/facebook/react/issues/140 ...
   // server side workaround to allow custom tags.
