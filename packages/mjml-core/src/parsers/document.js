@@ -47,9 +47,15 @@ function cleanNode (node) {
  * Avoid htmlparser to parse ending tags
  */
 function safeEndingTags (content) {
+  endingTags.concat([
+    'mj-style',
+    'mj-title',
+  ])
+
   endingTags.forEach(tag => {
     content = content.replace(regexTag(tag), replaceTag(tag))
   })
+
   return content
 }
 
@@ -201,14 +207,14 @@ export default function parseMjml (xml, attributes) {
   }
 
   if (mjml.tagName === 'mjml') {
-    const mjHead = _.find(mjml.children, child => child.tagName === 'mj-head')
+    const head = _.find(mjml.children, el => el.tagName === 'mj-head')
 
-    if (mjHead.children) {
-      each(mjHead.children, el => {
+    if (head && head.children) {
+      each(head.children, el => {
         const handler = MJMLHeadElements[el.tagName]
 
-        if (handler) {
-          handler(el, { ...attributes })
+        if (handler && typeof handler === 'function') {
+          handler(el, attributes)
         }
       })
     }

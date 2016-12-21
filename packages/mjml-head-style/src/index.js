@@ -1,8 +1,12 @@
 export default {
-  name: "mj-style",
-  handler: (el, { css }) => {
-    const innerText = el.children.map(child => (child.type === 'text' || child.nodeType === Node.TEXT_NODE) && child.data).join('')
+  name: 'mj-style',
+  handler: (element, globalAttributes) => {
+    const {
+      content,
+    } = element
 
-    css.push(innerText)
-  }
+    if (content) {
+      globalAttributes.css.push(content)
+    }
+  },
 }

@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { argv } from 'yargs'
 import { cd, exec, rm } from 'shelljs'
 import babel from 'gulp-babel'
@@ -7,13 +8,21 @@ import newer from 'gulp-newer'
 import path from 'path'
 import through from 'through2'
 
+
+const ROOT_PATH = path.resolve(__dirname)
 const PACKAGES_PATH = path.resolve(__dirname, './packages')
-const packages = fs.readdirSync(PACKAGES_PATH).filter(file => {
-  return fs.statSync(path.resolve(PACKAGES_PATH, file)).isDirectory()
-}).reduce((acc, file) => ({
-  ...acc,
-  [file]: path.resolve(PACKAGES_PATH, file)
-}), {})
+const packages = fs.readdirSync(PACKAGES_PATH)
+  .filter(file => fs.statSync(path.resolve(PACKAGES_PATH, file)).isDirectory())
+  .reduce((acc, file) => ({
+    ...acc,
+    [file]: path.resolve(PACKAGES_PATH, file),
+  }), {})
+
+const sharedDeps = [
+  'lodash',
+  'react-dom',
+  'react',
+]
 
 let srcEx
 let libFragment
@@ -26,8 +35,32 @@ if (path.win32 === path) {
   libFragment = '$1/lib/'
 }
 
+gulp.task('install', () => Promise.all(
+    // Link all packages to the root
+    _.map(packages, (directory, packageName) => new Promise(resolve => {
+      cd(directory)
+      exec('npm link')
+      cd(ROOT_PATH)
+      exec(`npm link ${packageName}`)
+      resolve()
+    }))
+  )
+  .then(() => Promise.all(
+    // Remove duplicated packages and shared dependencies so they are loaded
+    // from the top
+    _.map(packages, (directory, packageName) => Promise.all(
+      Object.keys(packages)
+        .concat(sharedDeps)
+        .map(dependencyName => new Promise(resolve => {
+          rm('-rf', path.resolve(directory, 'node_modules', dependencyName))
+          resolve()
+        }))
+    ))
+  ))
+)
+
 gulp.task('build', () => {
-  return gulp.src(`${PACKAGES_PATH}/*/src/**/*.js`)
+  gulp.src(`${PACKAGES_PATH}/*/src/**/*.js`)
     .pipe(through.obj((file, encoding, callback) => {
       file.contents = new Buffer(String(file.contents).replace(/__MJML_VERSION__/g, require(path.resolve(PACKAGES_PATH, `${file.relative.split(path.sep)[0]}/package.json`)).version))
       callback(null, file)
@@ -42,16 +75,6 @@ gulp.task('build', () => {
     .pipe(gulp.dest(PACKAGES_PATH))
 })
 
-gulp.task('install', () => {
-  return Promise.all(
-    Object.keys(packages).map(packageName => new Promise(resolve => {
-      cd(packages[packageName])
-      exec('npm install')
-      resolve()
-    }))
-  )
-})
-
 gulp.task('test', () => {
   return Promise.all(
     Object.keys(packages).map(packageName => new Promise(resolve => {
@@ -63,15 +86,13 @@ gulp.task('test', () => {
   )
 })
 
-gulp.task('clean', () => {
-  // Remove package node_modules
-  return Promise.all(
-    Object.keys(packages).map(packageName => new Promise(resolve => {
-      rm('-rf', path.resolve(packages[packageName], 'node_modules'), path.resolve(packages[packageName], 'lib'), path.resolve(packages[packageName], 'dist'))
-      resolve()
-    }))
-  )
-})
+gulp.task('clean', () => Promise.all(
+  // Remove package node_modules and lib directory
+  _.map(packages, (directory, packageName) => new Promise(resolve => {
+    rm('-rf', path.resolve(directory, 'node_modules'), path.resolve(directory, 'lib'))
+    resolve()
+  }))
+))
 
 gulp.task('version', () => {
   // Try to derive package name from directory where this was run from
@@ -83,12 +104,14 @@ gulp.task('version', () => {
   // Check params
   const packageName = argv.pkg || argv.p || pwdPackageName
   const version = argv.version || argv.v
+
   if (!packageName || !version) {
     throw new Error('Usage: gulp version -p <package> -v <version>')
   }
 
   // Bump the version
   cd(packages[packageName])
+
   const execResult = exec(`npm version ${version}`)
   const bumpedVersion = execResult.toString().replace('\n', '').replace('v', '')
 

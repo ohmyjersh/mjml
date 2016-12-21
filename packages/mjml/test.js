@@ -1,5 +1,23 @@
 var mjml = require('./lib/index')
 const inputMJML = `<mjml>
+  <mj-head>
+    <mj-title>
+      Toto
+    </mj-title>
+    <mj-attributes>
+      <mj-text padding="0" />
+      <mj-class name="blue" color="blue" />
+      <mj-class name="big" font-size="20px" />
+      <mj-all font-family="Arial" />
+    </mj-attributes>
+    <mj-style>
+      .red-color {
+        color: red;
+      }
+    </mj-style>
+    <mj-font name="Raleway" href="https://fonts.googleapis.com/css?family=Raleway" />
+    <mj-font name="Open Sans" href="https://fonts.googleapis.com/css?family=Open+Sans" />
+  </mj-head>
   <mj-body>
     <mj-container background-color="#d6dde5">
       <mj-section background-color="white">
