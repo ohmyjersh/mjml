@@ -2,7 +2,7 @@
  * Avoid htmlparser to parse ending tags
  */
 
-export const regexTag = tag => new RegExp(`<${tag}([^>]*)>([^<]*?)</${tag}>`, 'gmi')
+export const regexTag = tag => new RegExp(`<${tag}([^>\/]*)>([^.]*?)</${tag}>`, 'gmi')
 export const replaceTag = tag => `<${tag}$1><![CDATA[$2]]></${tag}>`
 
 export default function safeEndingTags (endingTags, content) {

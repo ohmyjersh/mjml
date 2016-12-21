@@ -3,8 +3,9 @@ import expat from 'node-expat'
 import each from 'lodash/each'
 import find from 'lodash/find'
 import isObject from 'lodash/isObject'
+import mapValues from 'lodash/mapValues'
 
-import replaceAmpersandsInAttributes from './helpers/replaceAmpersandsInAttributes'
+import parseAttributes from './helpers/parseAttributes'
 import cleanNode from './helpers/cleanNode'
 import convertBooleansOnAttrs from './helpers/convertBooleansOnAttrs'
 import safeEndingTags from './helpers/safeEndingTags'
@@ -21,9 +22,8 @@ export default function parseMjml (xml, options) {
     convertBooleans,
   } = options
 
-  let safeXml = safeEndingTags(endingTags, xml)
-
-  safeXml = replaceAmpersandsInAttributes(safeXml)
+  let safeXml = parseAttributes(xml)
+  safeXml = safeEndingTags(endingTags, safeXml)
 
   const parser = new expat.Parser('utf-8')
 
@@ -35,6 +35,8 @@ export default function parseMjml (xml, options) {
       // "true" and "false" will be converted to bools
       attrs = convertBooleansOnAttrs(attrs)
     }
+
+    attrs = mapValues(attrs, val => decodeURIComponent(val))
 
     const newNode = {
       parent: cur,
@@ -106,7 +108,7 @@ export default function parseMjml (xml, options) {
   }
 
   const body = find(mjml.children, el => el.tagName === 'mj-body')
-
+  console.log(JSON.stringify(mjml))
   return {
     body,
     globalAttributes,
