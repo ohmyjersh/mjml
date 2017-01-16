@@ -1,20 +1,20 @@
 var mjml = require('./lib/index')
 
 const inputMJML = `<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-size="36px" />
+      <mj-all color="blue" />
+      <mj-all font-size="40px" />
+    </mj-attributes>
+  </mj-head>
   <mj-body>
     <mj-container background-color="#d6dde5">
-      <mj-column>
-        <mj-button
-            align="left"
-            border="2px solid #F9A73E"
-            font-size="16px"
-            font-weight="400"
-            padding="0 68px 26px 68px"
-            font-family="'Open Sans', sans-serif"
-            background-color="#ffffff"
-            href="<%=@tip.link.to_s%>"
-            color="#F9A73E">READ MORE</mj-button>
-      </mj-column>
+      <mj-section background-color="white">
+        <mj-column>
+          <mj-text>Hello Boyz</mj-text>
+        </mj-column>
+      </mj-section>
     </mj-container>
   </mj-body>
 </mjml>`
