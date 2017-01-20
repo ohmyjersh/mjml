@@ -52,6 +52,7 @@ export default class MJMLRenderer {
     this.options = defaults(options, { level: "soft", disableMjStyle: false, disableMjInclude: false, disableMinify: false })
 
     if (typeof this.content === 'string') {
+      this.validate()
       this.parseDocument()
     }
   }
